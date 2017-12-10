@@ -19,6 +19,7 @@ public class MyGdxGame implements ApplicationListener
 
 
 	List<Rectangle> rockPositions;
+	List<List<Rectangle>> collisionObjects;
 
     @Override
     public void create()
@@ -31,10 +32,19 @@ public class MyGdxGame implements ApplicationListener
 		Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
 		rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
 		rockPositions = new ArrayList<Rectangle>();
+		collisionObjects = new ArrayList<List<Rectangle>>();
+		
+		for (int i=0; i<100; i++)
+		{
+			collisionObjects.add(new ArrayList<Rectangle>());
+		}
+		
 		int x = 1800;
 		for (int i = 0; i < 60; i++)
 		{
-			rockPositions.add(new Rectangle(x, 0, 100, 100));
+			Rectangle rect =new Rectangle(x, 0, 100, 100);
+			rockPositions.add(rect);
+			collisionObjects.get((int)Math.floor(x/1800)).add(rect);
 			x += 600 + new Random().nextInt(600);
 		}
 
@@ -77,16 +87,30 @@ public class MyGdxGame implements ApplicationListener
 		// Move camera
 		camera.translate((guitarMan.manVelocity.x - camera.viewportWidth / 80) * Gdx.graphics.getDeltaTime(), 0);
 
+		int indMan =(int) guitarMan.manPosition.x /1800;
 		// Detect collision
-		for (Rectangle r : rockPositions)
+		for (int i = indMan - 1; i < indMan + 2; i++)
 		{
-			if (r.x > guitarMan.manPosition.x - 300 && guitarMan.isCollision(r))
+			if (i<0) continue;
+			for (Rectangle r : collisionObjects.get(i))
 			{
-				collisionSound.play();
-				resetGame();
-				break;
+				if (guitarMan.isCollision(r))
+				{
+					collisionSound.play();
+					resetGame();
+					break;
+				}
 			}
 		}
+//		for (Rectangle r : rockPositions)
+//		{
+//			if (r.x > guitarMan.manPosition.x - 300 && guitarMan.isCollision(r))
+//			{
+//				collisionSound.play();
+//				resetGame();
+//				break;
+//			}
+//		}
     }
 
 	private void resetGame()

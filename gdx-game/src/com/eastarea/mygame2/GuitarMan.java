@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 
-public class GuitarMan
+public class GuitarMan 
 {
 	Animation walkAnimation;
 	int countFrames;
@@ -13,6 +13,8 @@ public class GuitarMan
 	Vector2 manVelocity;
 	
 	float time;
+	
+	boolean onGround;
 	
 	GuitarMan()
 	{
@@ -23,6 +25,7 @@ public class GuitarMan
 		countFrames = FRAME_COLS * FRAME_ROWS;
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS);
         TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+		onGround = true;
         int index = 0;
         for (int i = 0; i < FRAME_ROWS; i++)
 		{
@@ -48,14 +51,16 @@ public class GuitarMan
 		manPosition.x += manVelocity.x * Gdx.graphics.getDeltaTime();
 		manPosition.y += manVelocity.y * Gdx.graphics.getDeltaTime();
 		manVelocity.y -= 1000 * Gdx.graphics.getDeltaTime();
-		if (Gdx.input.isTouched() && manPosition.y == 0)
+		if (Gdx.input.isTouched() && onGround)
 		{
 			manVelocity.y = 500;
+			onGround = false;
 		}
 		if (manPosition.y < 0) 
 		{
 			manPosition.y = 0;
 			manVelocity.y = 0;
+			onGround =true;
 		}
 	}
 	
