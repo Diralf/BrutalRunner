@@ -3,13 +3,21 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.graphics.glutils.*;
+import java.util.*;
+import android.graphics.drawable.shapes.*;
+import android.widget.ExpandableListView.*;
 
-public class GuitarMan 
+public class GuitarMan implements IRenderable
 {
+
+	
+
 	Animation walkAnimation;
 	int countFrames;
 	
-	Rectangle manPosition;
+	Rectangle position;
+	Rectangle nextPosition;
 	Vector2 manVelocity;
 	
 	float time;
@@ -38,34 +46,92 @@ public class GuitarMan
 		
 	}
 	
+	@Override
 	public void render(SpriteBatch batch)
 	{
 		// Draw man
-        batch.draw(walkAnimation.getKeyFrame(time, true), manPosition.x, manPosition.y, manPosition.width, manPosition.height);
+        batch.draw(walkAnimation.getKeyFrame(time, true), position.x, position.y, position.width, position.height);
 		time += Gdx.graphics.getDeltaTime();
 		if (time > countFrames) time-=countFrames;
 	}
 	
-	public void update()
+	@Override
+	public void render(ShapeRenderer shape)
 	{
-		manPosition.x += manVelocity.x * Gdx.graphics.getDeltaTime();
-		manPosition.y += manVelocity.y * Gdx.graphics.getDeltaTime();
-		manVelocity.y -= 1000 * Gdx.graphics.getDeltaTime();
+		// TODO: Implement this method
+	}
+	
+	public void update(List<List<Rectangle>> collisionObjects)
+	{
+		nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
+		nextPosition.y = position.y;
+		
+		if (checkCollision(nextPosition, collisionObjects, 200) != null)
+		{
+			nextPosition.x = position.x;
+		}
+		
+		nextPosition.y = position.y + manVelocity.y * Gdx.graphics.getDeltaTime();
+		
+		if (checkCollision(nextPosition, collisionObjects, 200) != null)
+		{
+			nextPosition.y = position.y;
+			onGround =true;
+		} else {
+			onGround = false;
+		}
+		
+		position.x = nextPosition.x ;
+		position.y = nextPosition.y;
+		if (!onGround)
+			manVelocity.y -= 1000 * Gdx.graphics.getDeltaTime();
+		else
+			manVelocity.y= 0;
+			
 		if (Gdx.input.isTouched() && onGround)
 		{
 			manVelocity.y = 500;
 			onGround = false;
 		}
-		if (manPosition.y < 0) 
+		
+	}
+	
+	public Rectangle checkCollision(Rectangle first, List<List<Rectangle>> collisionObjects, int cellSize)
+	{
+		int indMan =(int) first.x /cellSize;
+		// Detect collision
+		for (int i = indMan - 1; i < indMan + 3; i++)
 		{
-			manPosition.y = 0;
-			manVelocity.y = 0;
-			onGround =true;
+			if (i<0) continue;
+			for (Rectangle other : collisionObjects.get(i))
+			{
+				if (first.overlaps(other))
+				{
+					return other;// make check for all rect
+				}
+			}
 		}
+		return null;
 	}
 	
 	public boolean isCollision(Rectangle r)
 	{
-		return manPosition.overlaps(r) && manPosition.getCenter(new Vector2()).dst(r.getCenter(new Vector2())) < 120 ;
+		return position.overlaps(r) && position.getCenter(new Vector2()).dst(r.getCenter(new Vector2())) < 120 ;
+	}
+	
+	public void handleCollision(Rectangle other)
+	{
+		
+//		if (position.y < (other.y) && (position.x+ position.width)< other.x+200) 
+//		{
+//			manVelocity.x = 0;
+//			position.x = other.x - position.width;
+//		} else {
+//			if (!onGround) {
+//				manVelocity.y = 0;
+//				position.y = other.y + other.height;
+//				onGround=true;
+//			}
+//		}
 	}
 }
