@@ -17,7 +17,7 @@ public class BrutalGame
 	GuitarMan guitarMan;
 	int cellSize;
 	
-	List<VisibleBox> visibleBoxes;
+	List<IRenderable> visibleBoxes;
 	
 	Map<ECollisionType, CollisionList> collisionMap;
 	
@@ -31,7 +31,7 @@ public class BrutalGame
 
 		// Load and position rocks
 		
-		visibleBoxes = new ArrayList<VisibleBox>();
+		visibleBoxes = new ArrayList<IRenderable>();
 		
 		
 		int levelLength = 350;
@@ -46,12 +46,12 @@ public class BrutalGame
 			if ((i % 7) == 0) yBox = 70;
 			SolidBox box = new SolidBox(i*cellSize, yBox, cellSize, 50);
 			visibleBoxes.add(box);
-			collisionMap.get(ECollisionType.SOLID).add(i, box.mask);
+			collisionMap.get(ECollisionType.SOLID).add(i, box);
 		}
 		
 		LiquidBox lbox = new LiquidBox(1600, 150, 100, 100);
 		visibleBoxes.add(lbox);
-		collisionMap.get(ECollisionType.LIQUID).add(8, lbox.mask);
+		collisionMap.get(ECollisionType.LIQUID).add(8, lbox);
 
 		guitarMan = new GuitarMan();
 
@@ -71,11 +71,11 @@ public class BrutalGame
 		batch.disableBlending();
 		// Draw background
 		for (int i = 0; i < 30; i++)
-			batch.draw(backgroundTexture, i * 2900, 0, 2900, 800);
+			batch.draw(backgroundTexture, i * 2900 + (guitarMan.position.x/2), 0, 2900, 800);
 
 		batch.enableBlending();
 		
-		for (VisibleBox b: visibleBoxes)
+		for (IRenderable b: visibleBoxes)
 		    b.render(batch);
 			
 		guitarMan.render(batch);
@@ -87,7 +87,7 @@ public class BrutalGame
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-		for (VisibleBox b: visibleBoxes)
+		for (IRenderable b: visibleBoxes)
 		    b.render(shapeRenderer);
 
 		shapeRenderer.setColor(0, 0.5f, 0, 1);
@@ -110,7 +110,8 @@ public class BrutalGame
 
 		// Move camera
 		//camera.translate((guitarMan.manVelocity.x - camera.viewportWidth / 80) * Gdx.graphics.getDeltaTime(), 0);
-		camera.position.x = guitarMan.position.x + camera.viewportWidth / 2;
+		camera.position.x = guitarMan.position.x + camera.viewportWidth / 2 - 50;
+		//camera.position.y = guitarMan.position.y;
 
 		if (guitarMan.position.y + guitarMan.position.height < 0) 
 		{

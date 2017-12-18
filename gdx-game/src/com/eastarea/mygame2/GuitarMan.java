@@ -8,7 +8,7 @@ import java.util.*;
 import android.graphics.drawable.shapes.*;
 import android.widget.ExpandableListView.*;
 
-public class GuitarMan implements IRenderable
+public class GuitarMan implements IRenderable, ICollideable
 {
 
 	
@@ -66,19 +66,32 @@ public class GuitarMan implements IRenderable
 		nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
 		nextPosition.y = position.y;
 		
-		Rectangle meetRect =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
-		if (meetRect != null)
+		List<ICollideable> list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
+		if (!list.isEmpty())
 		{
 			nextPosition.x = position.x;
 		}
 		
 		nextPosition.y = position.y + manVelocity.y * Gdx.graphics.getDeltaTime();
-		meetRect =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
-		if (meetRect != null)
+		list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
+		if (!list.isEmpty())
 		{
-			if (position.y > meetRect.y + meetRect.height)
+			ICollideable meetRect = list.get(0);
+			float minDist = manVelocity.y;
+			for (ICollideable c : list)
 			{
-				nextPosition.y = meetRect.y + meetRect.height;
+				float dist = position.y - c.getMask().y - c.getMask().height;
+				if (dist < minDist && dist > 0)
+				{
+					meetRect = c;
+				}
+				c.emitCollision(this);
+			}
+			//meetRect.emitCollision(this);
+			Rectangle meetMask = meetRect.getMask();
+			if (position.y > meetMask.y + meetMask.height)
+			{
+				nextPosition.y = meetMask.y + meetMask.height;
 			} else {
 				nextPosition.y = position.y;
 			}
@@ -102,42 +115,37 @@ public class GuitarMan implements IRenderable
 		
 	}
 	
-	public Rectangle checkCollision(Rectangle first, CollisionList collisions, int cellSize)
+	public List<ICollideable> checkCollision(Rectangle first, CollisionList collisions, int cellSize)
 	{
+	    List<ICollideable> list = new ArrayList<ICollideable>();
 		int indMan =(int) first.x /cellSize;
 		// Detect collision
 		for (int i = indMan - 1; i < indMan + 3; i++)
 		{
 			if (i<0) continue;
-			for (Rectangle other : collisions.list.get(i))
+			for (ICollideable other : collisions.list.get(i))
 			{
-				if (first.overlaps(other))
+				if (first.overlaps(other.getMask()))
 				{
-					return other;// make check for all rect
+					list.add(other);
+					//return other;// make check for all rect
 				}
 			}
 		}
-		return null;
+		return list;
+	}
+
+	@Override
+	public void emitCollision(ICollideable other)
+	{
+		// TODO: Implement this method
+	}
+
+	@Override
+	public Rectangle getMask()
+	{
+		// TODO: Implement this method
+		return position;
 	}
 	
-	public boolean isCollision(Rectangle r)
-	{
-		return position.overlaps(r) && position.getCenter(new Vector2()).dst(r.getCenter(new Vector2())) < 120 ;
-	}
-	
-	public void handleCollision(Rectangle other)
-	{
-		
-//		if (position.y < (other.y) && (position.x+ position.width)< other.x+200) 
-//		{
-//			manVelocity.x = 0;
-//			position.x = other.x - position.width;
-//		} else {
-//			if (!onGround) {
-//				manVelocity.y = 0;
-//				position.y = other.y + other.height;
-//				onGround=true;
-//			}
-//		}
-	}
 }

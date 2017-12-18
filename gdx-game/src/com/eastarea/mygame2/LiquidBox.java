@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.*;
 
-public class LiquidBox extends VisibleBox
+public class LiquidBox extends CollisionBox implements IRenderable
 {
+	
 	TextureRegion rockTexture;
 	
 	LiquidBox(int x, int y, int width, int height)
@@ -26,6 +27,12 @@ public class LiquidBox extends VisibleBox
 	{
 		// TODO: Implement this method
 		batch.draw(rockTexture, mask.x, mask.y, mask.width, mask.height);
+	}
+
+	@Override
+	public void emitCollision(ICollideable other)
+	{
+		// TODO: Implement this method
 	}
 
 }

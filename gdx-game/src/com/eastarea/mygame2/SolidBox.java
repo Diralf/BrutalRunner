@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import android.graphics.drawable.shapes.*;
 
-public class SolidBox extends VisibleBox
+public class SolidBox extends CollisionBox implements IRenderable
 {
+	boolean isPlaceMan;
 
 	SolidBox(int x, int y, int width, int heigth)
 	{
@@ -16,8 +17,12 @@ public class SolidBox extends VisibleBox
 	public void render(ShapeRenderer shape)
 	{
 		// TODO: Implement this method
-		shape.setColor(0.5f, 0, 0, 1);
+		if (isPlaceMan)
+			shape.setColor(0, 0, 0, 1);
+		else
+			shape.setColor(0.5f, 0, 0, 1);
 		shape.rect(mask.x, mask.y, mask.width, mask.height);
+		//isPlaceMan = false;
 	}
 
 	@Override
@@ -26,6 +31,11 @@ public class SolidBox extends VisibleBox
 		// TODO: Implement this method
 	}
 
-	
+	@Override
+	public void emitCollision(ICollideable other)
+	{
+		// TODO: Implement this method
+		isPlaceMan=true;
+	}
 	
 }
