@@ -11,14 +11,13 @@ public class BrutalGame
 {
 	OrthographicCamera camera;
 	TextureRegion backgroundTexture;
-	TextureRegion rockTexture;
+	
 	Sound collisionSound;
 
 	GuitarMan guitarMan;
 	int cellSize;
 	
 	List<VisibleBox> visibleBoxes;
-	List<List<Rectangle>> collisionObjects;
 	
 	Map<ECollisionType, CollisionList> collisionMap;
 	
@@ -31,8 +30,7 @@ public class BrutalGame
 		backgroundTexture = new TextureRegion(texture, 0, 0, 2048, 563);
 
 		// Load and position rocks
-		Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
-		rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
+		
 		visibleBoxes = new ArrayList<VisibleBox>();
 		
 		
@@ -50,6 +48,10 @@ public class BrutalGame
 			visibleBoxes.add(box);
 			collisionMap.get(ECollisionType.SOLID).add(i, box.mask);
 		}
+		
+		LiquidBox lbox = new LiquidBox(1600, 150, 100, 100);
+		visibleBoxes.add(lbox);
+		collisionMap.get(ECollisionType.LIQUID).add(8, lbox.mask);
 
 		guitarMan = new GuitarMan();
 
@@ -73,6 +75,9 @@ public class BrutalGame
 
 		batch.enableBlending();
 		
+		for (VisibleBox b: visibleBoxes)
+		    b.render(batch);
+			
 		guitarMan.render(batch);
 
 		font.draw(batch, (int) (guitarMan.position.x / 70) + "m", camera.position.x - 10, 30);
