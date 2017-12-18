@@ -4,14 +4,12 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import android.graphics.drawable.shapes.*;
 
-public class SolidBox implements IRenderable
+public class SolidBox extends VisibleBox
 {
 
-	Rectangle mask;
-	
 	SolidBox(int x, int y, int width, int heigth)
 	{
-		mask = new Rectangle(x, y, width, heigth);
+		super(x, y, width, heigth);
 	}
 	
 	@Override

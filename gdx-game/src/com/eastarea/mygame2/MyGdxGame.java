@@ -21,8 +21,9 @@ public class MyGdxGame implements ApplicationListener
 
 	ShapeRenderer shapeRenderer;
 	
-	List<SolidBox> solidBoxes;
+	List<VisibleBox> solidBoxes;
 	List<List<Rectangle>> collisionObjects;
+	
 
     @Override
     public void create()
@@ -36,18 +37,19 @@ public class MyGdxGame implements ApplicationListener
 		// Load and position rocks
 		Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
 		rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
-		solidBoxes = new ArrayList<SolidBox>();
+		solidBoxes = new ArrayList<VisibleBox>();
 		collisionObjects = new ArrayList<List<Rectangle>>();
 		
-		for (int i=0; i<300; i++)
+		for (int i=0; i<350; i++)
 		{
 			collisionObjects.add(new ArrayList<Rectangle>());
 		}
 		
-		for (int i=0; i<30;i++) 
+		for (int i=0; i<300;i++) 
 		{
 			int yBox = 0;
 			if ((i % 10) == 0) yBox = 50;
+			if ((i % 7) == 0) yBox = 70;
 			SolidBox box = new SolidBox(i*cellSize, yBox, cellSize, 50);
 			solidBoxes.add(box);
 			collisionObjects.get(i).add(box.mask);
@@ -71,6 +73,7 @@ public class MyGdxGame implements ApplicationListener
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camera.update();
+	
 		batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
@@ -78,20 +81,16 @@ public class MyGdxGame implements ApplicationListener
 		for (int i = 0; i < 30; i++)
 			batch.draw(backgroundTexture, i * 2900, 0, 2900, 800);
 
-		// Draw rocks
-		
-			
-		
-
 		guitarMan.render(batch);
 		
 		font.draw(batch, (int) (guitarMan.position.x / 70) + "m", camera.position.x - 10, 30);
+		font.draw(batch, Gdx.graphics.getDeltaTime() + "t", camera.position.x + 30, camera.viewportHeight - 30);
         batch.end();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-		for (SolidBox b: solidBoxes)
+		for (VisibleBox b: solidBoxes)
 		    b.render(shapeRenderer);
 
 		shapeRenderer.setColor(0, 0.5f, 0, 1);
@@ -106,7 +105,6 @@ public class MyGdxGame implements ApplicationListener
 		shapeRenderer.end();
 		
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		
 		shapeRenderer.setColor(0,0,0,1);
 		shapeRenderer.rect(guitarMan.position.x, guitarMan.position.y, guitarMan.position.width, guitarMan.position.height);
 		shapeRenderer.end();
@@ -117,6 +115,10 @@ public class MyGdxGame implements ApplicationListener
 		//camera.translate((guitarMan.manVelocity.x - camera.viewportWidth / 80) * Gdx.graphics.getDeltaTime(), 0);
 		camera.position.x = guitarMan.position.x + camera.viewportWidth / 2;
 
+		if (guitarMan.position.y + guitarMan.position.height < 0) 
+		{
+			resetGame();
+		}
 //		int indMan =(int) guitarMan.position.x /cellSize;
 //		// Detect collision
 //		for (int i = indMan - 1; i < indMan + 3; i++)
@@ -148,7 +150,7 @@ public class MyGdxGame implements ApplicationListener
 	private void resetGame()
 	{
 		configureCamera();
-		guitarMan.position = new Rectangle(0, 50, 200, 200);
+		guitarMan.position = new Rectangle(0, 100, 200, 200);
 		guitarMan.nextPosition = new Rectangle(0,50,200,200);
 		guitarMan.manVelocity = new Vector2(500, 0);
 	}

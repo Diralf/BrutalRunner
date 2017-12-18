@@ -66,16 +66,22 @@ public class GuitarMan implements IRenderable
 		nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
 		nextPosition.y = position.y;
 		
-		if (checkCollision(nextPosition, collisionObjects, 200) != null)
+		Rectangle meetRect =checkCollision(nextPosition, collisionObjects, 200);
+		if (meetRect != null)
 		{
 			nextPosition.x = position.x;
 		}
 		
 		nextPosition.y = position.y + manVelocity.y * Gdx.graphics.getDeltaTime();
-		
-		if (checkCollision(nextPosition, collisionObjects, 200) != null)
+		meetRect =checkCollision(nextPosition, collisionObjects, 200);
+		if (meetRect != null)
 		{
-			nextPosition.y = position.y;
+			if (position.y > meetRect.y + meetRect.height)
+			{
+				nextPosition.y = meetRect.y + meetRect.height;
+			} else {
+				nextPosition.y = position.y;
+			}
 			onGround =true;
 		} else {
 			onGround = false;
@@ -84,7 +90,7 @@ public class GuitarMan implements IRenderable
 		position.x = nextPosition.x ;
 		position.y = nextPosition.y;
 		if (!onGround)
-			manVelocity.y -= 1000 * Gdx.graphics.getDeltaTime();
+			manVelocity.y -= 1500 * Gdx.graphics.getDeltaTime();
 		else
 			manVelocity.y= 0;
 			
