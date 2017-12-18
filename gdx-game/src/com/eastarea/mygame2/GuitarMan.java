@@ -61,19 +61,19 @@ public class GuitarMan implements IRenderable
 		// TODO: Implement this method
 	}
 	
-	public void update(List<List<Rectangle>> collisionObjects)
+	public void update(CollisionList collisions)
 	{
 		nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
 		nextPosition.y = position.y;
 		
-		Rectangle meetRect =checkCollision(nextPosition, collisionObjects, 200);
+		Rectangle meetRect =checkCollision(nextPosition, collisions, 200);
 		if (meetRect != null)
 		{
 			nextPosition.x = position.x;
 		}
 		
 		nextPosition.y = position.y + manVelocity.y * Gdx.graphics.getDeltaTime();
-		meetRect =checkCollision(nextPosition, collisionObjects, 200);
+		meetRect =checkCollision(nextPosition, collisions, 200);
 		if (meetRect != null)
 		{
 			if (position.y > meetRect.y + meetRect.height)
@@ -102,14 +102,14 @@ public class GuitarMan implements IRenderable
 		
 	}
 	
-	public Rectangle checkCollision(Rectangle first, List<List<Rectangle>> collisionObjects, int cellSize)
+	public Rectangle checkCollision(Rectangle first, CollisionList collisions, int cellSize)
 	{
 		int indMan =(int) first.x /cellSize;
 		// Detect collision
 		for (int i = indMan - 1; i < indMan + 3; i++)
 		{
 			if (i<0) continue;
-			for (Rectangle other : collisionObjects.get(i))
+			for (Rectangle other : collisions.list.get(i))
 			{
 				if (first.overlaps(other))
 				{

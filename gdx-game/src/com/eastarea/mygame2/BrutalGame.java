@@ -19,6 +19,7 @@ public class BrutalGame
 	
 	List<VisibleBox> solidBoxes;
 	List<List<Rectangle>> collisionObjects;
+	CollisionList collisions;
 	
 	
 	BrutalGame() 
@@ -33,21 +34,17 @@ public class BrutalGame
 		Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
 		rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
 		solidBoxes = new ArrayList<VisibleBox>();
-		collisionObjects = new ArrayList<List<Rectangle>>();
+		
+		collisions = new CollisionList(350);
 
-		for (int i=0; i<350; i++)
-		{
-			collisionObjects.add(new ArrayList<Rectangle>());
-		}
-
-		for (int i=0; i<300;i++) 
+		for (int i=0; i<collisions.length-10;i++) 
 		{
 			int yBox = 0;
 			if ((i % 10) == 0) yBox = 50;
 			if ((i % 7) == 0) yBox = 70;
 			SolidBox box = new SolidBox(i*cellSize, yBox, cellSize, 50);
 			solidBoxes.add(box);
-			collisionObjects.get(i).add(box.mask);
+			collisions.add(i, box.mask);
 		}
 
 		guitarMan = new GuitarMan();
@@ -97,7 +94,7 @@ public class BrutalGame
 		shapeRenderer.rect(guitarMan.position.x, guitarMan.position.y, guitarMan.position.width, guitarMan.position.height);
 		shapeRenderer.end();
 
-		guitarMan.update(collisionObjects);
+		guitarMan.update(collisions);
 
 		// Move camera
 		//camera.translate((guitarMan.manVelocity.x - camera.viewportWidth / 80) * Gdx.graphics.getDeltaTime(), 0);
