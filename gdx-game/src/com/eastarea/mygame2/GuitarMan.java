@@ -61,19 +61,19 @@ public class GuitarMan implements IRenderable
 		// TODO: Implement this method
 	}
 	
-	public void update(CollisionList collisions)
+	public void update(Map<ECollisionType, CollisionList> collisions)
 	{
 		nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
 		nextPosition.y = position.y;
 		
-		Rectangle meetRect =checkCollision(nextPosition, collisions, 200);
+		Rectangle meetRect =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
 		if (meetRect != null)
 		{
 			nextPosition.x = position.x;
 		}
 		
 		nextPosition.y = position.y + manVelocity.y * Gdx.graphics.getDeltaTime();
-		meetRect =checkCollision(nextPosition, collisions, 200);
+		meetRect =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
 		if (meetRect != null)
 		{
 			if (position.y > meetRect.y + meetRect.height)

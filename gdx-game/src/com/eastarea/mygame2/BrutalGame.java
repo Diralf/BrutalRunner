@@ -17,10 +17,10 @@ public class BrutalGame
 	GuitarMan guitarMan;
 	int cellSize;
 	
-	List<VisibleBox> solidBoxes;
+	List<VisibleBox> visibleBoxes;
 	List<List<Rectangle>> collisionObjects;
-	CollisionList collisions;
 	
+	Map<ECollisionType, CollisionList> collisionMap;
 	
 	BrutalGame() 
 	{
@@ -33,18 +33,22 @@ public class BrutalGame
 		// Load and position rocks
 		Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
 		rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
-		solidBoxes = new ArrayList<VisibleBox>();
+		visibleBoxes = new ArrayList<VisibleBox>();
 		
-		collisions = new CollisionList(350);
+		
+		int levelLength = 350;
+		collisionMap = new HashMap<ECollisionType, CollisionList>();
+		collisionMap.put(ECollisionType.SOLID, new CollisionList(levelLength));
+		collisionMap.put(ECollisionType.LIQUID, new CollisionList(levelLength));
 
-		for (int i=0; i<collisions.length-10;i++) 
+		for (int i=0; i<levelLength - 10;i++) 
 		{
 			int yBox = 0;
 			if ((i % 10) == 0) yBox = 50;
 			if ((i % 7) == 0) yBox = 70;
 			SolidBox box = new SolidBox(i*cellSize, yBox, cellSize, 50);
-			solidBoxes.add(box);
-			collisions.add(i, box.mask);
+			visibleBoxes.add(box);
+			collisionMap.get(ECollisionType.SOLID).add(i, box.mask);
 		}
 
 		guitarMan = new GuitarMan();
@@ -62,10 +66,13 @@ public class BrutalGame
 		batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
+		batch.disableBlending();
 		// Draw background
 		for (int i = 0; i < 30; i++)
 			batch.draw(backgroundTexture, i * 2900, 0, 2900, 800);
 
+		batch.enableBlending();
+		
 		guitarMan.render(batch);
 
 		font.draw(batch, (int) (guitarMan.position.x / 70) + "m", camera.position.x - 10, 30);
@@ -75,7 +82,7 @@ public class BrutalGame
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-		for (VisibleBox b: solidBoxes)
+		for (VisibleBox b: visibleBoxes)
 		    b.render(shapeRenderer);
 
 		shapeRenderer.setColor(0, 0.5f, 0, 1);
@@ -94,7 +101,7 @@ public class BrutalGame
 		shapeRenderer.rect(guitarMan.position.x, guitarMan.position.y, guitarMan.position.width, guitarMan.position.height);
 		shapeRenderer.end();
 
-		guitarMan.update(collisions);
+		guitarMan.update(collisionMap);
 
 		// Move camera
 		//camera.translate((guitarMan.manVelocity.x - camera.viewportWidth / 80) * Gdx.graphics.getDeltaTime(), 0);
