@@ -61,19 +61,19 @@ public class GuitarMan implements IRenderable, ICollideable
 		// TODO: Implement this method
 	}
 	
-	public void update(Map<ECollisionType, CollisionList> collisions)
+	public void update(Map<ECollisionType, CollisionList> collisions, int cellSize)
 	{
 		nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
 		nextPosition.y = position.y;
 		
-		List<ICollideable> list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
+		List<ICollideable> list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), cellSize);
 		if (!list.isEmpty())
 		{
 			nextPosition.x = position.x;
 		}
 		
 		nextPosition.y = position.y + manVelocity.y * Gdx.graphics.getDeltaTime();
-		list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), 200);
+		list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), cellSize);
 		if (!list.isEmpty())
 		{
 			ICollideable meetRect = list.get(0);
@@ -111,6 +111,12 @@ public class GuitarMan implements IRenderable, ICollideable
 		{
 			manVelocity.y = 500;
 			onGround = false;
+		}
+		
+		list =checkCollision(nextPosition, collisions.get(ECollisionType.LIQUID), cellSize);
+		for (ICollideable c : list)
+		{
+			c.emitCollision(this);
 		}
 		
 	}

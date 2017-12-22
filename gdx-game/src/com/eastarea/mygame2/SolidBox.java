@@ -21,7 +21,7 @@ public class SolidBox extends CollisionBox implements IRenderable
 			shape.setColor(0, 0, 0, 1);
 		else
 			shape.setColor(0.5f, 0, 0, 1);
-		shape.rect(mask.x, mask.y, mask.width, mask.height);
+		shape.rect(mask.x, mask.y, mask.width-2, mask.height);
 		//isPlaceMan = false;
 	}
 

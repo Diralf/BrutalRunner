@@ -14,7 +14,7 @@ public class MyGdxGame implements ApplicationListener
 	ShapeRenderer shapeRenderer;
 	BitmapFont font;
 	
-	BrutalGame game;
+	static BrutalGame game;
 
     @Override
     public void create()
