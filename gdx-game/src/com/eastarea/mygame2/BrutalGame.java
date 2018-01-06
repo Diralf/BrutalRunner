@@ -15,7 +15,7 @@ public class BrutalGame
 	Sound collisionSound;
 	Music backMusic;
 	StartMusicTrigger startMusicTrigger;
-	int startMusicPosition=11;
+	int startMusicPosition=0;
 
 	GuitarMan guitarMan;
 	int cellSize=123;
