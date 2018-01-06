@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.math.*;
 import java.util.*;
 import com.badlogic.gdx.graphics.glutils.*;
+import com.eastarea.mygame2.editor.*;
 
 public class MyGdxGame implements ApplicationListener
 {
@@ -14,7 +15,10 @@ public class MyGdxGame implements ApplicationListener
 	ShapeRenderer shapeRenderer;
 	BitmapFont font;
 	
+	IStagable currentStage;
+	
 	static BrutalGame game;
+	static BrutalEditor editor;
 
     @Override
     public void create()
@@ -24,6 +28,8 @@ public class MyGdxGame implements ApplicationListener
 		font = new BitmapFont();
 		
 		game = new BrutalGame();
+		editor = new BrutalEditor();
+		currentStage = editor;
     }
 
     @Override
@@ -32,31 +38,31 @@ public class MyGdxGame implements ApplicationListener
 		Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
-		game.render(batch, shapeRenderer,font);
+		currentStage.render(batch, shapeRenderer,font);
     }
 
 	@Override
     public void dispose()
 	{
         batch.dispose();
-		game.dispose();
+		currentStage.dispose();
     }
 
     @Override
     public void resize(int width, int height)
 	{
-		game.resize(width,height);
+		currentStage.resize(width,height);
     }
 
     @Override
     public void pause()
 	{
-		game.pause();
+		currentStage.pause();
     }
 
     @Override
     public void resume()
 	{
-		game.resume();
+		currentStage.resume();
     }
 }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.glutils.*;
 
-public class BrutalGame
+public class BrutalGame implements IStagable
 {
 	OrthographicCamera camera;
 	TextureRegion backgroundTexture;
@@ -72,6 +72,7 @@ public class BrutalGame
 		resetGame();
 	}
 	
+	@Override
 	public void render(SpriteBatch batch, ShapeRenderer shapeRenderer,BitmapFont font)
 	{
 		camera.update();
@@ -152,20 +153,24 @@ public class BrutalGame
 			camera.setToOrtho(false, 800 * Gdx.graphics.getWidth() / Gdx.graphics.getHeight(), 800);
 	}
 	
+	@Override
     public void dispose()
 	{
         backMusic.dispose();
     }
 
+	@Override
     public void resize(int width, int height)
 	{
 		resetGame();
     }
-
+	
+	@Override
     public void pause()
 	{
     }
 
+	@Override
     public void resume()
 	{
     }
