@@ -18,6 +18,8 @@ public class BrutalEditor implements IStagable
 
 	Music music;
 	
+	ButtonExample button;
+	
 	public BrutalEditor()
 	{
 		Texture texture = new Texture(Gdx.files.internal("skyBackground.jpg"));
@@ -31,6 +33,9 @@ public class BrutalEditor implements IStagable
 			camera.setToOrtho(false, 800, 800 * Gdx.graphics.getHeight() / Gdx.graphics.getWidth());
 		else
 			camera.setToOrtho(false, 800 * Gdx.graphics.getWidth() / Gdx.graphics.getHeight(), 800);
+		
+		button = new ButtonExample();
+		button.create();
 	}
 	
 	@Override
@@ -75,6 +80,7 @@ public class BrutalEditor implements IStagable
 		}
 
 		position += Gdx.graphics.getDeltaTime();
+		button.render();
 	}
 
 	@Override
