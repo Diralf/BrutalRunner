@@ -5,6 +5,13 @@ import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import java.io.*;
+import org.jaudiotagger.*;
+import org.jaudiotagger.audio.mp3.*;
+import org.jaudiotagger.audio.exceptions.*;
+import org.jaudiotagger.tag.*;
 
 public class BrutalEditor implements IStagable
 {
@@ -25,7 +32,7 @@ public class BrutalEditor implements IStagable
 		Texture texture = new Texture(Gdx.files.internal("skyBackground.jpg"));
 		backgroundTexture = new TextureRegion(texture, 0, 0, 2048, 563);
 		music = Gdx.audio.newMusic(Gdx.files.internal("SevenNationArmy.mp3"));
-		
+		//MP3AudioHeader mp3 = getMP3("/storage/emulated/0/AppProjects/BrutalRunner/gdx-game-android/assets/SevenNationArmy.mp3");
 		notes = new float[1000];
 		
 		camera = new OrthographicCamera();
@@ -36,6 +43,48 @@ public class BrutalEditor implements IStagable
 		
 		button = new ButtonExample();
 		button.create();
+		
+		button.hitButton.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+				
+						notes[noteNumber] = music.getPosition();
+						noteNumber++;
+					
+					return true;
+				}
+		});
+		
+		button.startButton.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+					System.out.println("start clicked");
+					if (!music.isPlaying()) {
+						System.out.println("music started");
+						music.play();
+					}
+
+					return true;
+				}
+			});
+			
+		button.saveButton.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+					
+
+					return true;
+				}
+			});
+			
+		button.loadButton.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+
+
+					return true;
+				}
+			});
 	}
 	
 	@Override
@@ -57,27 +106,19 @@ public class BrutalEditor implements IStagable
 		//font.draw(batch, (int) (manPosition.x / 70) + "m", camera.position.x - 10, 30);
 		for (int i=0; i< noteNumber; i++)
 			font.draw(batch, notes[i]+"", camera.position.x - 10, 30+noteNumber*15-i*15);
-
-		if (position < 3) {
-			font.draw(batch, 3-position+"", camera.position.x - 10, 30-15);
-		}
         batch.end();
 
 
-		if (Gdx.input.isTouched())
-		{
-			if (noteNumber>0 && music.getPosition() - notes[noteNumber-1] < cooldown) 
-			{
-
-			} else {
-				notes[noteNumber] = music.getPosition();
-				noteNumber++;
-			}
-		}
-
-		if (position> 3 && !music.isPlaying()) {
-			music.play();
-		}
+//		if (Gdx.input.isTouched())
+//		{
+//			if (noteNumber>0 && music.getPosition() - notes[noteNumber-1] < cooldown) 
+//			{
+//
+//			} else {
+//				notes[noteNumber] = music.getPosition();
+//				noteNumber++;
+//			}
+//		}
 
 		position += Gdx.graphics.getDeltaTime();
 		button.render();
@@ -106,5 +147,64 @@ public class BrutalEditor implements IStagable
 	{
 		// TODO: Implement this method
 	}
+	
+	public MP3AudioHeader getMP3(String path) {
+		MP3AudioHeader mp3 = null;
+		
+		File f=new  File(path) ;
+		try {
+			mp3=new MP3AudioHeader(f);
+			System.out.println(" "+mp3.getSampleRate());
+			
+				MP3File mp = new MP3File(f);
+				System.out.println( mp.displayStructureAsXML());
+			}
+			catch (IOException e)
+		{e.printStackTrace();}
+			catch (CannotReadException e)
+		{e.printStackTrace();}
+			catch (TagException e)
+		{e.printStackTrace();}
+			catch (InvalidAudioFrameException e)
+		{e.printStackTrace();}
+			catch (ReadOnlyFileException e)
+		{e.printStackTrace();}
+		
+  
+		
+		return mp3;
+/*
+		textField.setText(f.getAbsolutePath());
+		l1.setText("Частота ="+Double.parseDouble(mp3.getSampleRate())/1000+"кГц");
+		l2.setText("Б.="+mp3.getBitRate()+" KBit/s");
+		l3.setText(" "+mp3.getNumberOfFrames());
+		l4.setText(""+mp3.getBitsPerSample());
+*/
+		
+	}
+	/*
+	public void actionPerformed(ActionEvent arg0) {
+
+		jfc.showOpenDialog(null);
+		File f=new  File(jfc.getSelectedFile().getAbsolutePath()) ;
+		try {
+			mp3=new MP3AudioHeader(f);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidAudioFrameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		textField.setText(f.getAbsolutePath());
+		l1.setText("Частота ="+Double.parseDouble(mp3.getSampleRate())/1000+"кГц");
+		l2.setText("Б.="+mp3.getBitRate()+" KBit/s");
+		l3.setText(" "+mp3.getNumberOfFrames());
+		l4.setText(""+mp3.getBitsPerSample());
+
+
+
+	}*/
 	
 }
