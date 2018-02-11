@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.*;
 import java.util.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.eastarea.mygame2.editor.*;
+import android.content.*;
 
 public class MyGdxGame implements ApplicationListener
 {
@@ -19,6 +20,12 @@ public class MyGdxGame implements ApplicationListener
 	
 	static BrutalGame game;
 	static BrutalEditor editor;
+
+	public static Context context;
+	
+	MyGdxGame (Context cont){
+		this.context = cont;
+	}
 
     @Override
     public void create()

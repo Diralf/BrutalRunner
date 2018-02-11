@@ -12,6 +12,8 @@ import org.jaudiotagger.*;
 import org.jaudiotagger.audio.mp3.*;
 import org.jaudiotagger.audio.exceptions.*;
 import org.jaudiotagger.tag.*;
+import com.eastarea.mygame2.io.*;
+import java.util.*;
 
 public class BrutalEditor implements IStagable
 {
@@ -71,6 +73,11 @@ public class BrutalEditor implements IStagable
 		button.saveButton.addListener(new ClickListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+					System.out.println("writed");
+					
+					List<String> list = new ArrayList<String>( Arrays.asList("mother", "wash", "window"));
+					
+					IOFile.writeArray("test.txt", list);
 					
 
 					return true;
@@ -80,7 +87,11 @@ public class BrutalEditor implements IStagable
 		button.loadButton.addListener(new ClickListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
-
+             		List<String> res =IOFile.readArray("test.txt");
+					System.out.println("readed ");
+					for (String line : res) {
+						System.out.println(line);
+					}
 
 					return true;
 				}
