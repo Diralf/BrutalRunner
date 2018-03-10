@@ -8,7 +8,7 @@ public class SolidBox extends CollisionBox implements IRenderable
 {
 	boolean isPlaceMan;
 
-	SolidBox(int x, int y, int width, int heigth)
+	public SolidBox(int x, int y, int width, int heigth)
 	{
 		super(x, y, width, heigth);
 	}

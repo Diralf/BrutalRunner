@@ -11,7 +11,7 @@ public class LiquidBox extends CollisionBox implements IRenderable
 	float color;
 	int heightBox;
 	
-	LiquidBox(int x, int y, int width, int height)
+	public LiquidBox(int x, int y, int width, int height)
 	{
 		super(x, y, width,height);
 		Texture texture2 = new Texture(Gdx.files.internal("rock.png"));

@@ -1,151 +1,94 @@
 package com.eastarea.mygame2;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.audio.*;
-import java.util.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.glutils.*;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.eastarea.mygame2.*;
+import com.eastarea.mygame2.Menu.*;
+import com.eastarea.mygame2.game.*;
+import com.eastarea.mygame2.io.*;
+import java.util.*;
 
 public class BrutalGame implements IStagable
 {
-	OrthographicCamera camera;
-	TextureRegion backgroundTexture;
 	
-	Sound collisionSound;
-	Music backMusic;
-	StartMusicTrigger startMusicTrigger;
-	int startMusicPosition=0;
-
-	GuitarMan guitarMan;
-	int cellSize=123;
+	GameSession session;
+	public OrthographicCamera camera;
+	public TextureRegion backgroundTexture;
 	
-	List<IRenderable> visibleBoxes;
+	public Sound collisionSound;
+	public int cellSize=125;
 	
-	Map<ECollisionType, CollisionList> collisionMap;
+	GameUIButtons buttons;
 	
-	int levelMap[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-	int bonusMap[] = {2,0,0,0,2,2,2,2,0,2,0,0,0,2,0,0};//{2,0,0,2,2,0,2,0,2,0,2,0,0,2,0,0};
-	BrutalGame() 
+	public BrutalGame() 
 	{
-		
+
 		// Load background 
 		Texture texture = new Texture(Gdx.files.internal("skyBackground.jpg"));
 		backgroundTexture = new TextureRegion(texture, 0, 0, 2048, 563);
 
 		// Load and position rocks
-		
-		visibleBoxes = new ArrayList<IRenderable>();
-		
-		
-		int levelLength = 350;
-		collisionMap = new HashMap<ECollisionType, CollisionList>();
-		collisionMap.put(ECollisionType.SOLID, new CollisionList(levelLength));
-		collisionMap.put(ECollisionType.LIQUID, new CollisionList(levelLength));
-
-//		for (int i=0; i<levelLength - 10;i++) 
-//		{
-//			int yBox = 0;
-//			if ((i % 10) == 0) yBox = 50;
-//			if ((i % 7) == 0) yBox = 70;
-//			SolidBox box = new SolidBox(i*cellSize, yBox, cellSize, 50);
-//			visibleBoxes.add(box);
-//			collisionMap.get(ECollisionType.SOLID).add(i, box);
-//		}
-		
-		makeMap(levelMap, ECollisionType.SOLID);
-		makeMap(bonusMap, ECollisionType.LIQUID);
-		
-		
-		LiquidBox lbox = new LiquidBox(1600, 150, 100, 100);
-		visibleBoxes.add(lbox);
-		collisionMap.get(ECollisionType.LIQUID).add(8, lbox);
-
-		guitarMan = new GuitarMan();
-
+	
 		collisionSound = Gdx.audio.newSound(Gdx.files.internal("collision.wav"));
-		backMusic = Gdx.audio.newMusic(Gdx.files.internal("SevenNationArmy.mp3"));
-		startMusicTrigger = new StartMusicTrigger(cellSize * startMusicPosition, 50, cellSize, cellSize);
-		collisionMap.get(ECollisionType.LIQUID).add(startMusicPosition, startMusicTrigger);
-		
+
 		camera = new OrthographicCamera();
-		resetGame();
+		
+		session = new GameSession(this);
+		buttons = new GameUIButtons(this);
+
+		buttons.back.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+					MyGdxGame.changeStage(new BrutalMainMenu());
+					return true;
+				}
+			});
+
+		buttons.start.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+					session.resetGame();
+					return true;
+				}
+				});
+				
+		buttons.pause.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+					session.backMusic.pause();
+					session.backMusic.play();
+
+					return true;
+				}
+			});
 	}
 	
 	@Override
 	public void render(SpriteBatch batch, ShapeRenderer shapeRenderer,BitmapFont font)
 	{
+	    //updateMap();
 		camera.update();
 
 		batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-
-		batch.disableBlending();
-		// Draw background
-		for (int i = 0; i < 30; i++)
-			batch.draw(backgroundTexture, i * 2900 + (guitarMan.position.x/2), 0, 2900, 800);
-
-		batch.enableBlending();
-		
-		for (IRenderable b: visibleBoxes)
-		    b.render(batch);
-			
-		guitarMan.render(batch);
-
-		font.setColor(0,0,0,1);
-		font.draw(batch, (int) (guitarMan.position.x / 70) + "m", camera.position.x - 10, 30);
-		font.draw(batch, (int)(backMusic.getPosition()/60)+":"+backMusic.getPosition()%60, camera.position.x + 30, camera.viewportHeight - 30);
-
-        batch.end();
+		session.renderBatch(batch, font);
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-		for (IRenderable b: visibleBoxes)
-		    b.render(shapeRenderer);
-
-//		shapeRenderer.setColor(0, 0.5f, 0, 1);
-//		shapeRenderer.circle(guitarMan.position.x, guitarMan.position.y, 40);
-//
-//		shapeRenderer.setColor(0.5f, 0, 0, 1);
-//		shapeRenderer.rect(10, 100, 80, 80);
-//
-//		shapeRenderer.setColor(0, 0, 0.5f, 1);
-//		shapeRenderer.triangle(10, 200, 90, 200, 50, 270);
-//
-		shapeRenderer.end();
-
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.setColor(0,0,0,1);
-		shapeRenderer.rect(guitarMan.position.x, guitarMan.position.y, guitarMan.position.width, guitarMan.position.height);
-		shapeRenderer.end();
-
-		guitarMan.update(collisionMap, cellSize);
-
-		// Move camera
-		//camera.translate((guitarMan.manVelocity.x - camera.viewportWidth / 80) * Gdx.graphics.getDeltaTime(), 0);
-		camera.position.x = guitarMan.position.x + camera.viewportWidth / 2 - 100;
-		//camera.position.y = guitarMan.position.y;
-
-		if (guitarMan.position.y + guitarMan.position.height < 0) 
-		{
-			collisionSound.play();
-			resetGame();
-		}
+		session.renderShapes(shapeRenderer);
+	
+		buttons.render();
+		
+		session.update();
 		
 	}
 	
-	private void resetGame()
-	{
-		configureCamera();
-		guitarMan.position = new Rectangle(0, 150, 100, 200);
-		guitarMan.nextPosition = new Rectangle(0,150,100,200);
-		guitarMan.manVelocity = new Vector2(500, 0);
-		if (backMusic.isPlaying()) backMusic.stop();
-		//backMusic.play();
-	}
 	
-	private void configureCamera()
+	
+	public void configureCamera()
 	{
 		if (Gdx.graphics.getHeight() < Gdx.graphics.getWidth())
 			camera.setToOrtho(false, 800, 800 * Gdx.graphics.getHeight() / Gdx.graphics.getWidth());
@@ -156,52 +99,101 @@ public class BrutalGame implements IStagable
 	@Override
     public void dispose()
 	{
-        backMusic.dispose();
+		session.dispose();
     }
 
 	@Override
     public void resize(int width, int height)
 	{
-		resetGame();
+		//resetGame();
     }
 	
 	@Override
     public void pause()
 	{
+		session.pause();
     }
 
 	@Override
     public void resume()
 	{
+		session.resume();
     }
 	
-	public int[] convertBinary(int num){
-		int binary[] = new int[40];
-		int index = 0;
-		while(num > 0){
-			binary[index++] = num%2;
-			num = num/2;
-		}
-		return binary;
-	}
 	
-	public void makeMap(int[] m, ECollisionType type)
-	{
-		for (int i = 0; i<300; i++)
-		{
-			int pos[] = convertBinary(m[i% m.length]);
-			for (int j=0; j < pos.length; j++)
-			{
-				if (pos[j]==0) continue;
-				CollisionBox box;
-				if (type == ECollisionType.SOLID)
-					box = new SolidBox(i*cellSize, j*50, cellSize, 50);
-				else
-					box = new LiquidBox(i*cellSize+ cellSize/4, j*50, cellSize/2, cellSize/2);
-				visibleBoxes.add((IRenderable)box);
-				collisionMap.get(type).add(i, box);
-			}
-		}
-	}
-	
+//	
+//	public void updateMap() {
+//		float resX = guitarMan.position.x;
+//		if (backMusic.getPosition() ==0) return;
+//		resX /= backMusic.getPosition();
+//		//System.out.println(resX);
+//		//System.out.print(" ");
+//		nextNoteNumber =0;
+//		for (int i=0; i<noteBoxes.size(); i++) {
+//			
+//			//resX *= notes.get(i);
+//			//System.out.println(resX);
+//			float pos = resX * notes.get(i);
+//			float prev = 0;
+//			noteBoxes.get(i).getMask().x= pos;
+//			if (i>0) {
+//				CollisionBox pBox = floorBoxes.get(i-1);
+//				prev = pBox.getMask().x + pBox.getMask().width;
+//			}
+//		    CollisionBox cBox = floorBoxes.get(i);
+//			cBox.getMask().x = prev;
+//			cBox.getMask().width = pos - prev - 2;
+//			
+//			if ( guitarMan.position.x > pos) {
+//				nextNoteNumber = i;
+//			}
+//			//noteBoxes.get(i).getMask().x = ((guitarMan.position.x-beginMusicPosition)*backMusic.getPosition())/notes.get(i)+beginMusicPosition;
+//		}
+//	}
+//	
+//	public void makeMapByNotes()
+//	{
+//		List<String> vals = IOFile.readFileSDArray("testext.txt");
+//		
+//		System.out.println(vals.toString());
+//		
+//		ECollisionType type = ECollisionType.LIQUID;
+//	    float prevPosition =0;
+//		int num =0;
+//		
+//		for (String val: vals) {
+//			float note = Float.parseFloat(val);
+//			CollisionBox box;
+//			box = new LiquidBox((int)(note), 50, cellSize/2, cellSize/2);
+//			visibleBoxes.add((IRenderable)box);
+//			noteBoxes.add(box);
+//			notes.add(note);
+//			collisionMap.get(type).add(num, box);
+//			
+//			box = new SolidBox((int)prevPosition, 0, (int)(prevPosition+note), 50);
+//			visibleBoxes.add((IRenderable)box);
+//			floorBoxes.add(box);
+//			collisionMap.get(ECollisionType.SOLID).add(num, box);
+//			prevPosition = note;
+//			num++;
+//			
+//		}
+//		//updateMap();
+//		
+////		for (int i = 0; i<300; i++)
+////		{
+////			int pos[] = convertBinary(m[i% m.length]);
+////			for (int j=0; j < pos.length; j++)
+////			{
+////				if (pos[j]==0) continue;
+////				CollisionBox box;
+////				if (type == ECollisionType.SOLID)
+////					box = new SolidBox(i*cellSize, j*50, cellSize, 50);
+////				else
+////					box = new LiquidBox(i*cellSize+ cellSize/4, j*50, cellSize/2, cellSize/2);
+////				visibleBoxes.add((IRenderable)box);
+////				collisionMap.get(type).add(i, box);
+////			}
+////		}
+//	}
 }

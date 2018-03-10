@@ -7,5 +7,7 @@
 <classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 <classpathentry exported="true" kind="lib" path="/gdx-game/libs/gdx.jar"/>
 <classpathentry exported="true" kind="lib" path="libs/gdx-backend-android.jar"/>
-<classpathentry kind="lib" path="/storage/emulated/0/AppProjects/BrutalRunner/gdx-game/libs/jaudiotagger.jar"/>
+<classpathentry kind="lib" path="/storage/emulated/0/AppProjects/BrutalRunner/gdx-game-android/libs/jaudiotagger.jar"/>
+<classpathentry kind="lib" path="/storage/emulated/0/AppProjects/BrutalRunner/gdx-game-android/libs/poi-3.17.jar"/>
+<classpathentry kind="lib" path="/storage/emulated/0/AppProjects/BrutalRunner/gdx-game/libs/poi-3.17.jar"/>
 </classpath>

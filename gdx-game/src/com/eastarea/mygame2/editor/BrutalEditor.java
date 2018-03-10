@@ -14,13 +14,14 @@ import org.jaudiotagger.audio.exceptions.*;
 import org.jaudiotagger.tag.*;
 import com.eastarea.mygame2.io.*;
 import java.util.*;
+import com.eastarea.mygame2.Menu.*;
 
 public class BrutalEditor implements IStagable
 {
 
 	OrthographicCamera camera;
 	TextureRegion backgroundTexture;
-	float[] notes;
+	List<Float> notes;
 	float position;
 	int noteNumber;
 	float cooldown = 0.2f;
@@ -35,7 +36,7 @@ public class BrutalEditor implements IStagable
 		backgroundTexture = new TextureRegion(texture, 0, 0, 2048, 563);
 		music = Gdx.audio.newMusic(Gdx.files.internal("SevenNationArmy.mp3"));
 		//MP3AudioHeader mp3 = getMP3("/storage/emulated/0/AppProjects/BrutalRunner/gdx-game-android/assets/SevenNationArmy.mp3");
-		notes = new float[1000];
+		notes = new ArrayList<Float>();
 		
 		camera = new OrthographicCamera();
 		if (Gdx.graphics.getHeight() < Gdx.graphics.getWidth())
@@ -44,13 +45,12 @@ public class BrutalEditor implements IStagable
 			camera.setToOrtho(false, 800 * Gdx.graphics.getWidth() / Gdx.graphics.getHeight(), 800);
 		
 		button = new ButtonExample();
-		button.create();
 		
 		button.hitButton.addListener(new ClickListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
 				
-						notes[noteNumber] = music.getPosition();
+						notes.add(music.getPosition());
 						noteNumber++;
 					
 					return true;
@@ -74,12 +74,8 @@ public class BrutalEditor implements IStagable
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
 					System.out.println("writed");
-					
-					List<String> list = new ArrayList<String>( Arrays.asList("mother", "wash", "window"));
-					
-					IOFile.writeArray("test.txt", list);
-					
-
+					//IOFile.writeArray("test.txt", notes);
+					IOFile.writeFileSDArray("testext.txt", notes);
 					return true;
 				}
 			});
@@ -87,15 +83,27 @@ public class BrutalEditor implements IStagable
 		button.loadButton.addListener(new ClickListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
-             		List<String> res =IOFile.readArray("test.txt");
+             		//List<String> res =IOFile.readArray("test.txt");
+					List<String> res = IOFile.readFileSDArray("testext.txt");
 					System.out.println("readed ");
 					for (String line : res) {
 						System.out.println(line);
 					}
+					//IOFile.readFileSDArray("testext.txt");
 
 					return true;
 				}
 			});
+			
+		button.menuButton.addListener(new ClickListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
+					MyGdxGame.changeStage(new BrutalMainMenu());
+					return true;
+				}
+			});
+			
+			//IOExcel.loadExcel();
 	}
 	
 	@Override
@@ -116,7 +124,7 @@ public class BrutalEditor implements IStagable
 
 		//font.draw(batch, (int) (manPosition.x / 70) + "m", camera.position.x - 10, 30);
 		for (int i=0; i< noteNumber; i++)
-			font.draw(batch, notes[i]+"", camera.position.x - 10, 30+noteNumber*15-i*15);
+			font.draw(batch, notes.get(i)+"", camera.position.x - 10, 30+noteNumber*15-i*15);
         batch.end();
 
 
@@ -138,7 +146,7 @@ public class BrutalEditor implements IStagable
 	@Override
 	public void dispose()
 	{
-		// TODO: Implement this method
+		music.stop();
 	}
 
 	@Override
@@ -150,13 +158,13 @@ public class BrutalEditor implements IStagable
 	@Override
 	public void pause()
 	{
-		// TODO: Implement this method
+		music.pause();
 	}
 
 	@Override
 	public void resume()
 	{
-		// TODO: Implement this method
+		music.play();
 	}
 	
 	public MP3AudioHeader getMP3(String path) {

@@ -7,7 +7,7 @@ public class CollisionList
 	List<List<ICollideable>> list;
 	int length;
 	
-	CollisionList(int length)
+	public CollisionList(int length)
 	{
 		list = new ArrayList<List<ICollideable>>();
 		this.length = length;

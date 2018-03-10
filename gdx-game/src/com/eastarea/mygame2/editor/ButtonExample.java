@@ -5,31 +5,17 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.*;
+import com.eastarea.mygame2.*;
 
-public class ButtonExample
+public class ButtonExample extends ButtonsPack 
 {
-
-    Stage stage;
-    TextButton button;
-    TextButtonStyle textButtonStyle;
-    BitmapFont font;
-    Skin skin;
-    TextureAtlas buttonAtlas;
 	TextButton startButton;
 	TextButton hitButton;
 	TextButton saveButton;
 	TextButton loadButton;
+	TextButton menuButton;
     
-    public void create() {      
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        font = new BitmapFont();
-        skin = new Skin();
-        buttonAtlas = new TextureAtlas(Gdx.files.internal("output/test-me!.pack"));
-        skin.addRegions(buttonAtlas);
-        textButtonStyle = new TextButtonStyle();
-		font.setScale(4.0f);
-        textButtonStyle.font = font;
+    public ButtonExample() {      
         //textButtonStyle.up = skin.getDrawable("up-button");
         //textButtonStyle.down = skin.getDrawable("down-button");
         //textButtonStyle.checked = skin.getDrawable("checked-button");
@@ -47,22 +33,10 @@ public class ButtonExample
 //				
 //			});
 			
-		startButton = createButton(stage, "Start", 0, 0);
-		hitButton = createButton(stage, "HIT", 700, 0);
-		saveButton = createButton(stage, "Save", 0, 300);
-		loadButton = createButton(stage, "Load", 0, 200);
+		startButton = createButton( "Start", 0, 0);
+		hitButton = createButton("HIT", 700, 0);
+		saveButton = createButton("Save", 0, 300);
+		loadButton = createButton("Load", 0, 200);
+		menuButton = createButton("Back to menu", 0, 400);
     }
-
-   
-    public void render() {     
-        stage.draw();
-    }
-	
-	private TextButton createButton(Stage stage, String text, int x, int y)
-	{
-		TextButton newButton = new TextButton(text, textButtonStyle);
-		newButton.setPosition(x,y);
-		stage.addActor(newButton);
-		return newButton;
-	}
 }

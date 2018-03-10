@@ -11,9 +11,9 @@ public class StartMusicTrigger extends LiquidBox
 	@Override
 	public void emitCollision(ICollideable other)
 	{
-		Music m = MyGdxGame.game.backMusic;
+		//Music m = MyGdxGame.game.backMusic;
 		//-*if (m.isPlaying()) m.stop();
-		m.play();
+		//m.play();
 	}
 	
     

@@ -9,6 +9,7 @@ import java.util.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.eastarea.mygame2.editor.*;
 import android.content.*;
+import com.eastarea.mygame2.Menu.*;
 
 public class MyGdxGame implements ApplicationListener
 {
@@ -16,10 +17,11 @@ public class MyGdxGame implements ApplicationListener
 	ShapeRenderer shapeRenderer;
 	BitmapFont font;
 	
-	IStagable currentStage;
+	static IStagable currentStage;
 	
-	static BrutalGame game;
-	static BrutalEditor editor;
+	//static BrutalGame game;
+	//static BrutalEditor editor;
+	//static BrutalMainMenu mainMenu;
 
 	public static Context context;
 	
@@ -34,9 +36,13 @@ public class MyGdxGame implements ApplicationListener
 		shapeRenderer = new ShapeRenderer();
 		font = new BitmapFont();
 		
+		/*
 		game = new BrutalGame();
 		editor = new BrutalEditor();
-		currentStage = editor;
+		mainMenu = new BrutalMainMenu();
+		currentStage = mainMenu;
+		*/
+		changeStage(new BrutalMainMenu());
     }
 
     @Override
@@ -72,4 +78,10 @@ public class MyGdxGame implements ApplicationListener
 	{
 		currentStage.resume();
     }
+	
+	static public void changeStage(IStagable newStage)
+	{
+		if (currentStage != null) currentStage.dispose();
+		currentStage = newStage;
+	}
 }

@@ -16,16 +16,19 @@ public class GuitarMan implements IRenderable, ICollideable
 	Animation walkAnimation;
 	int countFrames;
 	
-	Rectangle position;
-	Rectangle nextPosition;
-	Vector2 manVelocity;
+	public Rectangle position;
+	public Rectangle nextPosition;
+	public Vector2 manVelocity;
 	
 	float time;
 	
 	boolean onGround;
 	
-	GuitarMan()
+	BrutalGame game;
+	
+	public GuitarMan(BrutalGame game)
 	{
+		this.game = game;
 		// Create run animation
         Texture walkSheet = new Texture(Gdx.files.internal("runAnimation.png"));
 		int FRAME_COLS = 6;
@@ -63,7 +66,8 @@ public class GuitarMan implements IRenderable, ICollideable
 	
 	public void update(Map<ECollisionType, CollisionList> collisions, int cellSize)
 	{
-		nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
+		//nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
+		nextPosition.x =1+ game.session.backMusic.getPosition() * manVelocity.x;
 		nextPosition.y = position.y;
 		
 		List<ICollideable> list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), cellSize);
@@ -124,7 +128,7 @@ public class GuitarMan implements IRenderable, ICollideable
 	public List<ICollideable> checkCollision(Rectangle first, CollisionList collisions, int cellSize)
 	{
 	    List<ICollideable> list = new ArrayList<ICollideable>();
-		int indMan =(int) first.x /cellSize;
+		int indMan =  game.session.nextNoteNumber;//(int) first.x /cellSize;
 		// Detect collision
 		for (int i = indMan - 1; i < indMan + 3; i++)
 		{
