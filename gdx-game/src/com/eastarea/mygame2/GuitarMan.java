@@ -10,9 +10,6 @@ import android.widget.ExpandableListView.*;
 
 public class GuitarMan implements IRenderable, ICollideable
 {
-
-	
-
 	Animation walkAnimation;
 	int countFrames;
 	
@@ -29,6 +26,9 @@ public class GuitarMan implements IRenderable, ICollideable
 	public GuitarMan(BrutalGame game)
 	{
 		this.game = game;
+		position = new Rectangle(0, 51, 100, 200);
+		nextPosition = new Rectangle(0,51,100,200);
+		manVelocity = new Vector2(500, 0);
 		// Create run animation
         Texture walkSheet = new Texture(Gdx.files.internal("runAnimation.png"));
 		int FRAME_COLS = 6;
@@ -66,8 +66,10 @@ public class GuitarMan implements IRenderable, ICollideable
 	
 	public void update(Map<ECollisionType, CollisionList> collisions, int cellSize)
 	{
-		//nextPosition.x = position.x + manVelocity.x * Gdx.graphics.getDeltaTime();
-		nextPosition.x =1+ game.session.backMusic.getPosition() * manVelocity.x;
+		float deltaTime = Gdx.graphics.getDeltaTime();
+		if (deltaTime > 0.1) deltaTime = 0.03f;
+		nextPosition.x = position.x + manVelocity.x * deltaTime;
+		//nextPosition.x =1+ game.session.musicPosition * manVelocity.x;
 		nextPosition.y = position.y;
 		
 		List<ICollideable> list =checkCollision(nextPosition, collisions.get(ECollisionType.SOLID), cellSize);

@@ -15,13 +15,14 @@ import org.jaudiotagger.tag.*;
 import com.eastarea.mygame2.io.*;
 import java.util.*;
 import com.eastarea.mygame2.Menu.*;
+import com.eastarea.mygame2.note.*;
 
 public class BrutalEditor implements IStagable
 {
 
 	OrthographicCamera camera;
 	TextureRegion backgroundTexture;
-	List<Float> notes;
+	List<Note> notes;
 	float position;
 	int noteNumber;
 	float cooldown = 0.2f;
@@ -30,13 +31,16 @@ public class BrutalEditor implements IStagable
 	
 	ButtonExample button;
 	
+	String filename = "testext.txt";
+	String musicNname = "SevenNationArmy.mp3";
+	
 	public BrutalEditor()
 	{
 		Texture texture = new Texture(Gdx.files.internal("skyBackground.jpg"));
 		backgroundTexture = new TextureRegion(texture, 0, 0, 2048, 563);
-		music = Gdx.audio.newMusic(Gdx.files.internal("SevenNationArmy.mp3"));
+		music = Gdx.audio.newMusic(Gdx.files.internal(musicNname));
 		//MP3AudioHeader mp3 = getMP3("/storage/emulated/0/AppProjects/BrutalRunner/gdx-game-android/assets/SevenNationArmy.mp3");
-		notes = new ArrayList<Float>();
+		notes = new ArrayList<Note>();
 		
 		camera = new OrthographicCamera();
 		if (Gdx.graphics.getHeight() < Gdx.graphics.getWidth())
@@ -50,7 +54,8 @@ public class BrutalEditor implements IStagable
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
 				
-						notes.add(music.getPosition());
+						//notes.add(music.getPosition());
+						notes.add(new Note(music.getPosition()));
 						noteNumber++;
 					
 					return true;
@@ -75,7 +80,7 @@ public class BrutalEditor implements IStagable
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
 					System.out.println("writed");
 					//IOFile.writeArray("test.txt", notes);
-					IOFile.writeFileSDArray("testext.txt", notes);
+					NoteIO.writeExtArray(filename, notes);
 					return true;
 				}
 			});
@@ -84,10 +89,11 @@ public class BrutalEditor implements IStagable
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
              		//List<String> res =IOFile.readArray("test.txt");
-					List<String> res = IOFile.readFileSDArray("testext.txt");
+					List<Note> res = NoteIO.readExtArray(filename);
 					System.out.println("readed ");
-					for (String line : res) {
+					for (Note line : res) {
 						System.out.println(line);
+						System.out.println(line.time);
 					}
 					//IOFile.readFileSDArray("testext.txt");
 
@@ -124,7 +130,7 @@ public class BrutalEditor implements IStagable
 
 		//font.draw(batch, (int) (manPosition.x / 70) + "m", camera.position.x - 10, 30);
 		for (int i=0; i< noteNumber; i++)
-			font.draw(batch, notes.get(i)+"", camera.position.x - 10, 30+noteNumber*15-i*15);
+			font.draw(batch, notes.get(i).time+"", camera.position.x - 10, 30+noteNumber*15-i*15);
         batch.end();
 
 

@@ -14,22 +14,6 @@ public class BrutalMainMenu implements IStagable
 	public BrutalMainMenu()
 	{
 		buttons = new ButtonsMainMenu();
-		
-		buttons.gameButton.addListener(new ClickListener() {
-				@Override
-				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
-					MyGdxGame.changeStage(new BrutalGame());
-					return true;
-				}
-			});
-			
-		buttons.editorButton.addListener(new ClickListener() {
-				@Override
-				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
-					MyGdxGame.changeStage(new BrutalEditor());
-					return true;
-				}
-			});
 	}
 
 	@Override

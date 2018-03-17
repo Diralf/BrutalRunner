@@ -9,6 +9,8 @@ import com.eastarea.mygame2.*;
 
 public class ButtonExample extends ButtonsPack 
 {
+	Table container;
+	
 	TextButton startButton;
 	TextButton hitButton;
 	TextButton saveButton;
@@ -16,22 +18,6 @@ public class ButtonExample extends ButtonsPack
 	TextButton menuButton;
     
     public ButtonExample() {      
-        //textButtonStyle.up = skin.getDrawable("up-button");
-        //textButtonStyle.down = skin.getDrawable("down-button");
-        //textButtonStyle.checked = skin.getDrawable("checked-button");
-//        )button = new TextButton("Button1", textButtonStyle);
-//        stage.addActor(button);
-//		button.setX(100);
-//		
-//		button.addListener(new ChangeListener() {
-//				@Override
-//				public void changed (ChangeEvent event, Actor actor) {
-//					System.out.println("Button Pressed");
-//					System.out.println(event.toString());
-//				}
-//				
-//				
-//			});
 			
 		startButton = createButton( "Start", 0, 0);
 		hitButton = createButton("HIT", 700, 0);

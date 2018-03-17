@@ -9,8 +9,10 @@ public class NoteIO
 	static public void save(BufferedWriter bw, Note note) throws IOException
 	{
 		String separator = System.getProperty("line.separator");
-		bw.write(note.time + "");
-		bw.write(separator);
+		bw.write(note.time + separator);
+		bw.write(note.floor.getMask().y+separator);
+		bw.write(note.floor.getMask().height+separator);
+		bw.write(note.item.position.getMask().y+separator);
 	}
 	
 	static public Note load(BufferedReader br) throws IOException
@@ -19,7 +21,16 @@ public class NoteIO
 		if (str == null) return null;
 		float time = Float.parseFloat(str);
 		
-		return new Note(time, 0);
+		str = br.readLine();
+		int yFloor =(int) Float.parseFloat(str);
+		
+		str = br.readLine();
+		int hFloor = (int) Float.parseFloat(str);
+		
+		str = br.readLine();
+		int yItem = (int) Float.parseFloat(str);
+		
+		return new Note(time, yFloor, hFloor, yItem, NoteItemType.BONUS);
 	}
 	
 	static public void writeExtArray(String fileName, List<Note> data) {

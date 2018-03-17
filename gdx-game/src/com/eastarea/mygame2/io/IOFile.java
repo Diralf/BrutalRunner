@@ -239,4 +239,26 @@ public class IOFile
 		
 		return list;
 	}
+	
+	
+	static public ArrayList<File> listFiles(File dir, final String ext) {
+		ArrayList<File> filesList = new ArrayList<File>();
+		File[] files = dir.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return name.toLowerCase().endsWith("." + ext);
+				}
+			});
+		filesList.addAll(Arrays.asList(files));
+		return filesList;
+	}
+	
+	static public File getExtDir()
+	{
+		if (!Environment.getExternalStorageState().equals(
+				Environment.MEDIA_MOUNTED)) {
+			System.out.println("SD-карта не доступна: " + Environment.getExternalStorageState());
+			return null;
+		}
+		return MyGdxGame.context.getExternalFilesDir(null);
+	}
 }

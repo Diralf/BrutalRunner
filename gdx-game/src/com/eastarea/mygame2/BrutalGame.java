@@ -60,8 +60,7 @@ public class BrutalGame implements IStagable
 		buttons.pause.addListener(new ClickListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
-					session.backMusic.pause();
-					session.backMusic.play();
+					session.start();
 
 					return true;
 				}

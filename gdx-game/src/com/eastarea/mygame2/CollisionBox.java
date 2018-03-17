@@ -6,7 +6,7 @@ public abstract class CollisionBox implements ICollideable
 {
 	Rectangle mask;
 
-	CollisionBox(int x, int y, int width, int heigth)
+	public CollisionBox(int x, int y, int width, int heigth)
 	{
 		mask = new Rectangle(x, y, width, heigth);
 	}

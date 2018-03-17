@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
 import com.eastarea.mygame2.io.*;
+import com.eastarea.mygame2.note.*;
+import android.icu.util.*;
 
 public class GameSession
 {
@@ -16,39 +18,68 @@ public class GameSession
 	GuitarMan guitarMan;
 	
 	List<IRenderable> visibleBoxes;
-	List<CollisionBox> noteBoxes;
-	List<CollisionBox> floorBoxes;
-	List<Float> notes;
+	List<Note> notes;
+	
+	CollisionBox startFloor;
 	
 	Map<ECollisionType, CollisionList> collisionMap;
 	
 	public int nextNoteNumber = 0;
 	
+	float lastPosition = 0;
+	float deltaPosition= 0;
+	public float musicPosition = 0;
+	float beginMusicPosition = 0;
+	float beginMusicTime = 0;
+	boolean isBegin = false;
+	
+	String musicName = "SevenNationArmy.mp3";
+	String notesName = "testext.txt";
+	
 	public GameSession(BrutalGame game) {
-		this.game =game;
+		this.game = game;
 		visibleBoxes = new ArrayList<IRenderable>();
-		noteBoxes = new ArrayList<CollisionBox>();
-		floorBoxes = new ArrayList<CollisionBox>();
-		notes = new ArrayList<Float>();
+		notes = new ArrayList<Note>();
 		
 		int levelLength = 3500;
 		collisionMap = new HashMap<ECollisionType, CollisionList>();             
 		collisionMap.put(ECollisionType.SOLID, new CollisionList(levelLength));
 		collisionMap.put(ECollisionType.LIQUID, new CollisionList(levelLength));
 		
-		makeMapByNotes();
+		startFloor = new SolidBox(0,10,2000,40);
+		collisionMap.get(ECollisionType.SOLID).add(0, startFloor);
+		visibleBoxes.add((IRenderable)startFloor);
 		
 		guitarMan = new GuitarMan(game);
 		
-		backMusic = Gdx.audio.newMusic(Gdx.files.internal("SevenNationArmy.mp3"));
+		backMusic = Gdx.audio.newMusic(Gdx.files.internal(musicName));
 		
+		makeMapByNotes();
 		resetGame();
 	}
 	
 	public void update() 
 	{
-		updateMap();
-		
+		if (isBegin) 
+		{
+			musicPosition = backMusic.getPosition();
+			deltaPosition = backMusic.getPosition() - lastPosition;
+			if (deltaPosition - 0.01 > Gdx.graphics.getDeltaTime()) 
+			{
+				backMusic.pause();
+				backMusic.play();
+				musicPosition = lastPosition + Gdx.graphics.getDeltaTime();
+			}
+			lastPosition = backMusic.getPosition();
+			updateMap(50);
+		} else {
+			beginMusicTime += Gdx.graphics.getDeltaTime();
+			if (beginMusicTime > 1)
+			{
+				start();
+			}
+		}
+
 		//guitarMan.nextPosition.x =50+ backMusic.getPosition() * guitarMan.manVelocity.x;
 		guitarMan.update(collisionMap, game.cellSize);
 
@@ -58,16 +89,13 @@ public class GameSession
 
 		if (guitarMan.position.y < 0) 
 		{
-			guitarMan.manVelocity.y =2000;
+			guitarMan.manVelocity.y =1000;
 		}
-		
 	}
 	
 	
 	public void renderBatch(SpriteBatch batch, BitmapFont font)
 	{
-		
-		
 		batch.begin();
 
 		batch.disableBlending();
@@ -86,8 +114,15 @@ public class GameSession
 		font.draw(batch, (int) (guitarMan.position.x / 70) + "m", game.camera.position.x - 10, 30);
 		font.draw(batch, (int)(backMusic.getPosition()/60)+":"+backMusic.getPosition()%60, game.camera.position.x + 30, game.camera.viewportHeight - 30);
 		font.draw(batch, nextNoteNumber+"", game.camera.position.x - 170, game.camera.viewportHeight - 30);
-	
-        batch.end();
+		
+		font.draw(batch, Gdx.graphics.getDeltaTime()+"", game.camera.position.x - 250, game.camera.viewportHeight - 30);
+		font.draw(batch, deltaPosition+"", game.camera.position.x - 250, game.camera.viewportHeight - 40);
+		
+		font.draw(batch, guitarMan.position.x+"", game.camera.position.x - 250, game.camera.viewportHeight - 60);
+		font.draw(batch, beginMusicPosition+"", game.camera.position.x - 250, game.camera.viewportHeight - 70);
+        font.draw(batch, beginMusicTime+"", game.camera.position.x - 250, game.camera.viewportHeight - 90);
+		font.draw(batch, guitarMan.manVelocity.x+"", game.camera.position.x - 250, game.camera.viewportHeight - 110);
+		batch.end();
 	}
 	
 	public void renderShapes(ShapeRenderer shapeRenderer)
@@ -111,13 +146,31 @@ public class GameSession
 	
     public void pause()
 	{
-		backMusic.pause();
+		if (isBegin)
+		{
+			backMusic.pause();
+		}
+		
     }
 	
     public void resume()
 	{
-		backMusic.play();
+		if (isBegin) {
+			backMusic.play();
+		}
+		
     }
+	
+	public void start()
+	{
+		beginMusicPosition = guitarMan.position.x;
+		
+		nextNoteNumber = 0;
+		if (backMusic.isPlaying()) backMusic.stop();
+		backMusic.play();
+	    
+		isBegin = true;
+	}
 	
 	public void resetGame()
 	{
@@ -125,68 +178,61 @@ public class GameSession
 		guitarMan.position = new Rectangle(0, 51, 100, 200);
 		guitarMan.nextPosition = new Rectangle(0,51,100,200);
 		guitarMan.manVelocity = new Vector2(500, 0);
-		nextNoteNumber = 0;
+		beginMusicTime = 0;
+		startFloor.getMask().width = beginMusicPosition;
 		if (backMusic.isPlaying()) backMusic.stop();
-		backMusic.play();
-		if (backMusic.isPlaying()) {
-			updateMap();
-		}
+		backMusic.dispose();
+		backMusic = Gdx.audio.newMusic(Gdx.files.internal(musicName));
+		nextNoteNumber = 0;
+		isBegin = false;
+		beginMusicPosition = 0;
+		startFloor.getMask().width = 2000;
 	}
 	
-	public void updateMap() {
-		float resX = guitarMan.position.x + guitarMan.position.width;
-		if (backMusic.getPosition() ==0) return;
-		resX /= backMusic.getPosition();
-		//System.out.println(resX);
-		//System.out.print(" ");
-		nextNoteNumber =0;
-		for (int i=0; i<noteBoxes.size(); i++) {
-
-			//resX *= notes.get(i);
-			//System.out.println(resX);
-			float pos = resX * notes.get(i);
-			float prev = 0;
-			noteBoxes.get(i).getMask().x= pos;
+	public void updateMap(int range) {
+		float resX = guitarMan.position.x + guitarMan.position.width - beginMusicPosition;
+		if (musicPosition ==0) return;
+		resX /= musicPosition;
+		
+		int si =0;
+		int ei = notes.size();
+		
+		for (int i=si; i<ei; i++) {
+			Note prevNote;
 			if (i>0) {
-				CollisionBox pBox = floorBoxes.get(i-1);
-				prev = pBox.getMask().x + pBox.getMask().width;
+				prevNote = notes.get(i-1);
+			} else {
+				prevNote = new Note(0, startFloor, null);
 			}
-		    CollisionBox cBox = floorBoxes.get(i);
-			cBox.getMask().x = prev;
-			cBox.getMask().width = pos - prev - 2;
-
-			if ( guitarMan.position.x > pos) {
+			notes.get(i).updateOX(prevNote, resX, (int) beginMusicPosition);
+			if ( guitarMan.position.x + guitarMan.position.width > notes.get(i).floor.getMask().x) {
 				nextNoteNumber = i;
 			}
-			//noteBoxes.get(i).getMask().x = ((guitarMan.position.x-beginMusicPosition)*backMusic.getPosition())/notes.get(i)+beginMusicPosition;
 		}
 	}
 
 	public void makeMapByNotes()
 	{
-		List<String> vals = IOFile.readFileSDArray("testext.txt");
-		int cellSize = game.cellSize;
-
-		System.out.println(vals.toString());
+		List<Note> vals = NoteIO.readExtArray(notesName);
 
 		ECollisionType type = ECollisionType.LIQUID;
-	    float prevPosition =0;
 		int num =0;
 
-		for (String val: vals) {
-			float note = Float.parseFloat(val);
-			CollisionBox box;
-			box = new LiquidBox((int)(note), 50, cellSize/2, cellSize/2);
-			visibleBoxes.add((IRenderable)box);
-			noteBoxes.add(box);
-			notes.add(note);
-			collisionMap.get(type).add(num, box);
+		for (Note val: vals) {
+			Note prevNote;
+			if (num>0) {
+				prevNote = notes.get(num-1);
+			} else {
+				prevNote = new Note(0, startFloor, null);
+			}
+			val.updateOX(prevNote, guitarMan.manVelocity.x, (int) beginMusicPosition);
+			visibleBoxes.add((IRenderable)val.item.position);
 
-			box = new SolidBox((int)prevPosition, 0, (int)(prevPosition+note), 50);
-			visibleBoxes.add((IRenderable)box);
-			floorBoxes.add(box);
-			collisionMap.get(ECollisionType.SOLID).add(num, box);
-			prevPosition = note;
+			notes.add(val);
+			collisionMap.get(type).add(num, val.item.position);
+
+			visibleBoxes.add((IRenderable)val.floor);
+			collisionMap.get(ECollisionType.SOLID).add(num, val.floor);
 			num++;
 
 		}

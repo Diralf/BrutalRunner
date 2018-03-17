@@ -11,29 +11,26 @@ public class ButtonsPack
     public Stage stage;
     TextButtonStyle textButtonStyle;
     BitmapFont font;
-    Skin skin;
+    public Skin skin;
     TextureAtlas buttonAtlas;
 
     public ButtonsPack() {      
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         font = new BitmapFont();
-        skin = new Skin();
-        buttonAtlas = new TextureAtlas(Gdx.files.internal("output/test-me!.pack"));
-        skin.addRegions(buttonAtlas);
-        textButtonStyle = new TextButtonStyle();
-		font.setScale(4.0f);
-        textButtonStyle.font = font;
+		//skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+		skin = new Skin(Gdx.files.internal("comic/skin/comic-ui.json"));
     }
 
 
-    public void render() {     
+    public void render() {  
+		stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
 	protected TextButton createButton(String text, int x, int y)
 	{
-		TextButton newButton = new TextButton(text, textButtonStyle);
+		TextButton newButton = new TextButton(text, skin);
 		newButton.setPosition(x,y);
 		stage.addActor(newButton);
 		return newButton;
