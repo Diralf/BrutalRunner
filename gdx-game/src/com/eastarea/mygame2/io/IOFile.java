@@ -261,4 +261,9 @@ public class IOFile
 		}
 		return MyGdxGame.context.getExternalFilesDir(null);
 	}
+	
+	static public String getSortName(File file)
+	{
+		return file.getName().substring(0, file.getName().indexOf('.'));
+	}
 }

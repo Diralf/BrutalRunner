@@ -4,14 +4,11 @@ import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
-import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
-import com.eastarea.mygame2.*;
 import com.eastarea.mygame2.Menu.*;
 import com.eastarea.mygame2.game.*;
-import com.eastarea.mygame2.io.*;
-import java.util.*;
+import java.io.*;
 
 public class BrutalGame implements IStagable
 {
@@ -25,7 +22,7 @@ public class BrutalGame implements IStagable
 	
 	GameUIButtons buttons;
 	
-	public BrutalGame() 
+	public BrutalGame(File songFile) 
 	{
 
 		// Load background 
@@ -38,7 +35,7 @@ public class BrutalGame implements IStagable
 
 		camera = new OrthographicCamera();
 		
-		session = new GameSession(this);
+		session = new GameSession(this, songFile);
 		buttons = new GameUIButtons(this);
 
 		buttons.back.addListener(new ClickListener() {

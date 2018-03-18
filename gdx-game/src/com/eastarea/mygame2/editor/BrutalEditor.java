@@ -16,6 +16,7 @@ import com.eastarea.mygame2.io.*;
 import java.util.*;
 import com.eastarea.mygame2.Menu.*;
 import com.eastarea.mygame2.note.*;
+import com.eastarea.mygame2.songlist.*;
 
 public class BrutalEditor implements IStagable
 {
@@ -34,13 +35,15 @@ public class BrutalEditor implements IStagable
 	String filename = "testext.txt";
 	String musicNname = "SevenNationArmy.mp3";
 	
-	public BrutalEditor()
+	public BrutalEditor(File songFile)
 	{
+		filename = IOFile.getSortName(songFile) + ".txt";
 		Texture texture = new Texture(Gdx.files.internal("skyBackground.jpg"));
 		backgroundTexture = new TextureRegion(texture, 0, 0, 2048, 563);
-		music = Gdx.audio.newMusic(Gdx.files.internal(musicNname));
+		music = Gdx.audio.newMusic(Gdx.files.internal(songFile.getName()));
 		//MP3AudioHeader mp3 = getMP3("/storage/emulated/0/AppProjects/BrutalRunner/gdx-game-android/assets/SevenNationArmy.mp3");
 		notes = new ArrayList<Note>();
+		
 		
 		camera = new OrthographicCamera();
 		if (Gdx.graphics.getHeight() < Gdx.graphics.getWidth())
@@ -89,14 +92,15 @@ public class BrutalEditor implements IStagable
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
              		//List<String> res =IOFile.readArray("test.txt");
-					List<Note> res = NoteIO.readExtArray(filename);
-					System.out.println("readed ");
-					for (Note line : res) {
-						System.out.println(line);
-						System.out.println(line.time);
-					}
-					//IOFile.readFileSDArray("testext.txt");
-
+//					List<Note> res = NoteIO.readExtArray(filename);
+//					System.out.println("readed ");
+//					for (Note line : res) {
+//						System.out.println(line);
+//						System.out.println(line.time);
+//					}
+//					//IOFile.readFileSDArray("testext.txt");
+//
+					MyGdxGame.changeStage(new SongListUi());
 					return true;
 				}
 			});

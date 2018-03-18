@@ -1,14 +1,14 @@
 package com.eastarea.mygame2.game;
-import com.badlogic.gdx.audio.*;
-import com.eastarea.mygame2.*;
-import java.util.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
-import com.eastarea.mygame2.io.*;
+import com.eastarea.mygame2.*;
 import com.eastarea.mygame2.note.*;
-import android.icu.util.*;
+import java.io.*;
+import java.util.*;
+import com.eastarea.mygame2.io.*;
 
 public class GameSession
 {
@@ -36,8 +36,12 @@ public class GameSession
 	String musicName = "SevenNationArmy.mp3";
 	String notesName = "testext.txt";
 	
-	public GameSession(BrutalGame game) {
+	public GameSession(BrutalGame game, File songFile) {
 		this.game = game;
+		String shortFileName = IOFile.getSortName(songFile);
+		musicName = shortFileName+".mp3";
+		notesName = shortFileName+".txt";
+		
 		visibleBoxes = new ArrayList<IRenderable>();
 		notes = new ArrayList<Note>();
 		

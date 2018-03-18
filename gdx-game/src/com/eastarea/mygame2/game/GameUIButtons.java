@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.*;
 import com.eastarea.mygame2.*;
 
-public class GameUIButtons extends ButtonsPack
+public class GameUIButtons extends GuiScene
 {
 	
 	public TextButton back;

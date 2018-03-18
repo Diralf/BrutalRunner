@@ -7,8 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.*;
 import com.eastarea.mygame2.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.eastarea.mygame2.editor.*;
+import com.eastarea.mygame2.trackList.*;
+import com.eastarea.mygame2.songlist.*;
 
-public class ButtonsMainMenu extends ButtonsPack
+public class ButtonsMainMenu extends GuiScene
 {
 	Table container;
 
@@ -41,7 +43,7 @@ public class ButtonsMainMenu extends ButtonsPack
 		gameButton.addListener(new ClickListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
-					MyGdxGame.changeStage(new BrutalGame());
+					MyGdxGame.changeStage(new TrackListUI());
 					return true;
 				}
 			});
@@ -49,7 +51,7 @@ public class ButtonsMainMenu extends ButtonsPack
 		editorButton.addListener(new ClickListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
-					MyGdxGame.changeStage(new BrutalEditor());
+					MyGdxGame.changeStage(new SongListUi());
 					return true;
 				}
 			});

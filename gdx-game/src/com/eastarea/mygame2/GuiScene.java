@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.*;
 
-public class ButtonsPack
+public class GuiScene
 {
 
     public Stage stage;
@@ -14,7 +14,7 @@ public class ButtonsPack
     public Skin skin;
     TextureAtlas buttonAtlas;
 
-    public ButtonsPack() {      
+    public GuiScene() {      
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         font = new BitmapFont();

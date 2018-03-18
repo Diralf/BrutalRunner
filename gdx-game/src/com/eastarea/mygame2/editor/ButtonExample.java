@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.*;
 import com.eastarea.mygame2.*;
 
-public class ButtonExample extends ButtonsPack 
+public class ButtonExample extends GuiScene 
 {
 	Table container;
 	

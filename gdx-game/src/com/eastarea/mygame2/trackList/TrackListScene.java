@@ -6,16 +6,23 @@ import com.badlogic.gdx.graphics.g2d.*;
 public class TrackListScene implements IStagable
 {
 
+	TrackListUI ui;
 	
+	public TrackListScene()
+	{
+		ui = new TrackListUI();
+	}
 	@Override
 	public void render(SpriteBatch batch, ShapeRenderer shapeRenderer, BitmapFont font)
 	{
+		ui.render();
 		// TODO: Implement this method
 	}
 
 	@Override
 	public void dispose()
 	{
+	
 		// TODO: Implement this method
 	}
 
