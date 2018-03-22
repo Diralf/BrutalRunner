@@ -10,7 +10,7 @@ public class GameSession
 {
     BrutalGame game;
     
-    GameLevel level;
+    public GameLevel level;
     GuitarCube guitarCube;
     
     CollisionBox startFloor;
@@ -20,10 +20,13 @@ public class GameSession
         this.game = game;
         level = new GameLevel(500);
         
-        guitarCube = new GuitarCube();
+        guitarCube = new GuitarCube(game);
 		
         startFloor = new SolidBox(0,10,10000,40);
         level.add(0, startFloor);
+		level.add(0, (ICollideable) new SolidBox(0, 15, 10000, 40));
+		
+		level.add(0, (ICollideable) new SolidBox(1000, 120, 10000, 40));
     }
 
     public void resetGame()
@@ -33,7 +36,7 @@ public class GameSession
     
     public void update ()
     {
-        guitarCube.update();
+        guitarCube.update(level);
         
         game.camera.position.x = guitarCube.position.x + game.camera.viewportWidth / 2 - 100;
     }
