@@ -5,6 +5,11 @@ import com.badlogic.gdx.math.*;
 public abstract class CollisionBox implements ICollideable
 {
 	Rectangle mask;
+    
+    public CollisionBox()
+    {
+        mask = new Rectangle(0,0,0,0);
+    }
 
 	public CollisionBox(int x, int y, int width, int heigth)
 	{
@@ -17,5 +22,7 @@ public abstract class CollisionBox implements ICollideable
 		// TODO: Implement this method
 		return mask;
 	}
+    
+    
 
 }

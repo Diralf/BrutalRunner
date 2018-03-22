@@ -5,4 +5,5 @@ public interface ICollideable
 {
 	public void emitCollision(ICollideable other);
 	public Rectangle getMask();
+    public ECollisionType getType();
 }

@@ -15,6 +15,4 @@ public class StartMusicTrigger extends LiquidBox
 		//-*if (m.isPlaying()) m.stop();
 		//m.play();
 	}
-	
-    
 }

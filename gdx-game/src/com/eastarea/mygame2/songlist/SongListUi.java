@@ -22,7 +22,7 @@ public class SongListUi extends GuiTableScene implements IStagable
 		SongListItem listItem = new SongListItem(this);
 		ScrollList list = new ScrollList(this, files, listItem);
 		
-		TextButton onTopButton = new TextButton("On Top", skin);
+		TextButton onTopButton = new TextButton("Back to menu", skin);
 		onTopButton.addListener(new ChangeListener() {
 				public void changed (ChangeEvent event, Actor actor) {
 					MyGdxGame.changeStage(new BrutalMainMenu());
@@ -30,6 +30,8 @@ public class SongListUi extends GuiTableScene implements IStagable
 			});
 		
 		container.add(list.scroll).expand().fill().colspan(4);
+		container.row();
+		container.add(onTopButton);
 	}
 	
 	@Override

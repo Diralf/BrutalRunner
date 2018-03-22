@@ -61,6 +61,7 @@ public class GuitarMan implements IRenderable, ICollideable
 	@Override
 	public void render(ShapeRenderer shape)
 	{
+        shape.rect(position.x, position.y, 50, 50);
 		// TODO: Implement this method
 	}
 	
@@ -130,7 +131,8 @@ public class GuitarMan implements IRenderable, ICollideable
 	public List<ICollideable> checkCollision(Rectangle first, CollisionList collisions, int cellSize)
 	{
 	    List<ICollideable> list = new ArrayList<ICollideable>();
-		int indMan =  game.session.nextNoteNumber;//(int) first.x /cellSize;
+		int indMan =  0;//game.grun.nextNoteNumber; TODO
+        
 		// Detect collision
 		for (int i = indMan - 1; i < indMan + 3; i++)
 		{
@@ -159,5 +161,15 @@ public class GuitarMan implements IRenderable, ICollideable
 		// TODO: Implement this method
 		return position;
 	}
+
+    @Override
+    public ECollisionType getType()
+{
+ // TODO: Implement this method
+return ECollisionType.SOLID;
+}
+
 	
+    
+    
 }

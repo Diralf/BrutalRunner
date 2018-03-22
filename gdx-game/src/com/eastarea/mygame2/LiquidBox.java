@@ -7,15 +7,15 @@ import com.badlogic.gdx.*;
 public class LiquidBox extends CollisionBox implements IRenderable
 {
 	
-	TextureRegion rockTexture;
+	//TextureRegion rockTexture;
 	float color;
 	int heightBox;
 	
 	public LiquidBox(int x, int y, int width, int height)
 	{
 		super(x, y, width,height);
-		Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
-		rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
+		//Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
+		//rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
 		color = 1;
 	}
 
@@ -23,18 +23,22 @@ public class LiquidBox extends CollisionBox implements IRenderable
 	public void render(ShapeRenderer shape)
 	{
 		// TODO: Implement this method
-		//shape.rect(mask.x, mask.y, mask.width, mask.height);
+        shape.setColor(1,color,color,1);
+		shape.circle(mask.x+mask.width/2, mask.y+mask.height/2, heightBox);
+        shape.setColor(1,1,1,1);
+		color = 1;
+        heightBox = (int) mask.height/2;
 	}
 
 	@Override
 	public void render(SpriteBatch batch)
 	{
 		// TODO: Implement this method
-		batch.setColor(1,color,color,1);
-		batch.draw(rockTexture, mask.x, mask.y, mask.width, heightBox);
-		batch.setColor(1,1,1,1);
-		color = 1;
-		heightBox = (int) mask.height;
+//		batch.setColor(1,color,color,1);
+//		batch.draw(rockTexture, mask.x, mask.y, mask.width, heightBox);
+//		batch.setColor(1,1,1,1);
+//		color = 1;
+//		heightBox = (int) mask.height;
 	}
 
 	@Override
@@ -43,5 +47,11 @@ public class LiquidBox extends CollisionBox implements IRenderable
 	     color = 0;
 		 heightBox = 10;
 	}
+
+    @Override
+    public ECollisionType getType()
+    {
+        return ECollisionType.LIQUID;
+    }
 
 }

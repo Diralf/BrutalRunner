@@ -16,6 +16,7 @@ public class SolidBox extends CollisionBox implements IRenderable
 	@Override
 	public void render(ShapeRenderer shape)
 	{
+        shape.begin(ShapeRenderer.ShapeType.Filled);
 		// TODO: Implement this method
 		if (isPlaceMan)
 			shape.setColor(0, 0, 0, 1);
@@ -23,6 +24,7 @@ public class SolidBox extends CollisionBox implements IRenderable
 			shape.setColor(0.5f, 0, 0, 1);
 		shape.rect(mask.x, mask.y, mask.width-2, mask.height);
 		//isPlaceMan = false;
+        shape.end();
 	}
 
 	@Override
@@ -34,8 +36,12 @@ public class SolidBox extends CollisionBox implements IRenderable
 	@Override
 	public void emitCollision(ICollideable other)
 	{
-		// TODO: Implement this method
 		isPlaceMan=true;
 	}
-	
+
+    @Override
+    public ECollisionType getType()
+    {
+        return ECollisionType.SOLID;
+    }
 }
