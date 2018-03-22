@@ -102,6 +102,12 @@ public class GuitarCube implements IRenderable, ICollideable
             manVelocity.y -= 1500 * Gdx.graphics.getDeltaTime();
         else
             manVelocity.y= 0;
+			
+		list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.LIQUID), 0);
+		for (ICollideable c : list)
+		{
+			c.emitCollision(this);
+		}
     }
     
     @Override

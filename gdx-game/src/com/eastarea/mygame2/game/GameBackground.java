@@ -13,18 +13,18 @@ public class GameBackground implements IRenderable
 	public TextureRegion backgroundTexture1;
 	public TextureRegion backgroundTexture2;
 	public TextureRegion backgroundTexture3;
-    
+    public int size = 1126;
     public GameBackground(BrutalGame game)
     {
         this.game = game;
-        Texture texture = new Texture(Gdx.files.internal("background0.png"));
-        backgroundTexture0 = new TextureRegion(texture, 0, 0, 563, 563);
+        Texture texture = new Texture(Gdx.files.internal("background0.jpg"));
+        backgroundTexture0 = new TextureRegion(texture, 0, 0, size, size);
 		texture = new Texture(Gdx.files.internal("background1.png"));
-        backgroundTexture1= new TextureRegion(texture, 0, 0, 563, 563);
+        backgroundTexture1= new TextureRegion(texture, 0, 0, size, size);
 		texture = new Texture(Gdx.files.internal("background2.png"));
-        backgroundTexture2 = new TextureRegion(texture, 0, 0, 563, 563);
+        backgroundTexture2 = new TextureRegion(texture, 0, 0, size, size);
 		texture = new Texture(Gdx.files.internal("background3.png"));
-        backgroundTexture3 = new TextureRegion(texture, 0, 0, 563, 563);
+        backgroundTexture3 = new TextureRegion(texture, 0, 0, size, size);
         
     }
     

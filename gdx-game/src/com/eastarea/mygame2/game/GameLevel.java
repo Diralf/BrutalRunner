@@ -4,13 +4,15 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
 import com.eastarea.mygame2.*;
+import com.eastarea.mygame2.note.*;
 import java.util.*;
 
 public class GameLevel
 {
     public LevelList<IRenderable> renderList;
     public Map<ECollisionType, LevelList<ICollideable>> collisionMap;
-    
+	List<Note> notes;
+    int countNotes;
     int LEVEL_LENGTH = 500;
     
     public GameLevel(int levelLength)
@@ -21,6 +23,7 @@ public class GameLevel
         collisionMap = new HashMap<ECollisionType, LevelList<ICollideable>>();             
         collisionMap.put(ECollisionType.SOLID, new LevelList<ICollideable>(LEVEL_LENGTH));
         collisionMap.put(ECollisionType.LIQUID, new LevelList<ICollideable>(LEVEL_LENGTH));
+		notes = new ArrayList<Note>();
 		
     }
     
@@ -39,6 +42,13 @@ public class GameLevel
     {
         renderList.add(index, item);
     }
+	
+	public void add(int index, Note note)
+	{
+		add(index, note.floor);
+		add(index, note.item.position);
+		notes.add(note);
+	}
     
     public void render(SpriteBatch batch, ShapeRenderer shape)
     {
@@ -72,4 +82,6 @@ public class GameLevel
 		}
 		return list;
 	}
+	
+	
 }

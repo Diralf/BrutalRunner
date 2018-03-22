@@ -21,8 +21,8 @@ public class BrutalGame implements IStagable
     
     public Music backMusic;
     
-    String musicName;
-	String notesName;
+    public String musicName;
+	public String notesName;
 	
 	GameUIButtons buttons;
 	
@@ -58,7 +58,7 @@ public class BrutalGame implements IStagable
         // render
         session.render(batch, shapeRenderer, font);
         
-        camera.update();
+        //camera.update();
         
 		buttons.render();
 	}

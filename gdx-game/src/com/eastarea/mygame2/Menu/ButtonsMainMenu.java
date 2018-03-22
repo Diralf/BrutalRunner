@@ -23,7 +23,7 @@ public class ButtonsMainMenu extends GuiScene
 		//skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 		
 		container = new Table();
-		container.debug();
+		//container.debug();
 		stage.addActor(container);
 		container.setFillParent(true);
 		

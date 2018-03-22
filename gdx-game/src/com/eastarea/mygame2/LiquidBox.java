@@ -22,12 +22,14 @@ public class LiquidBox extends CollisionBox implements IRenderable
 	@Override
 	public void render(ShapeRenderer shape)
 	{
+		shape.begin(ShapeRenderer.ShapeType.Filled);
 		// TODO: Implement this method
         shape.setColor(1,color,color,1);
 		shape.circle(mask.x+mask.width/2, mask.y+mask.height/2, heightBox);
         shape.setColor(1,1,1,1);
 		color = 1;
         heightBox = (int) mask.height/2;
+		shape.end();
 	}
 
 	@Override
