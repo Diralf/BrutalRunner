@@ -30,7 +30,7 @@ public class NoteIO
 		str = br.readLine();
 		int yItem = (int) Float.parseFloat(str);
 		
-		return new Note(time, yFloor, hFloor, yItem+50, NoteItemType.BONUS);
+		return new Note(time, yFloor, hFloor, yItem, NoteItemType.BONUS);
 	}
 	
 	static public void writeExtArray(String fileName, List<Note> data) {

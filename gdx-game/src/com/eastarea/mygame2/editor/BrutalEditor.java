@@ -129,8 +129,7 @@ public class BrutalEditor implements IStagable
         batch.begin();
 
 		// Draw background
-		for (int i = 0; i < 30; i++)
-			batch.draw(backgroundTexture, i * 2900, 0, 2900, 800);
+		batch.draw(backgroundTexture, 0, 0, 2900, 800);
 
 		//font.draw(batch, (int) (manPosition.x / 70) + "m", camera.position.x - 10, 30);
 		for (int i=0; i< noteNumber; i++)
@@ -157,6 +156,7 @@ public class BrutalEditor implements IStagable
 	public void dispose()
 	{
 		music.stop();
+		music.dispose();
 	}
 
 	@Override
