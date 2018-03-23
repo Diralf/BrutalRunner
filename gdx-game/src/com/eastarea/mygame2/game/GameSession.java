@@ -5,6 +5,7 @@ import com.eastarea.mygame2.*;
 import com.eastarea.mygame2.character.*;
 import com.eastarea.mygame2.note.*;
 import java.util.*;
+import com.badlogic.gdx.*;
 
 public class GameSession
 {
@@ -19,7 +20,7 @@ public class GameSession
 	
 	int beginMusicPosition = 300;
 	float musicPosition = 0;
-	int nextNoteNumber = 0;
+	public int nextNoteNumber = 0;
 
     public GameSession(BrutalGame game)
     {
@@ -37,6 +38,8 @@ public class GameSession
 		level.add(0, note);
 		
 		makeMapByNotes(game.notesName, startFloor);
+        
+        game.backMusic.play();
     }
 
     public void resetGame()
@@ -65,10 +68,12 @@ public class GameSession
         batch.begin();
         font.setColor(0,0,0,1);
         font.draw(batch, (int) (guitarCube.position.x) + "m", game.camera.position.x - 10, 300);
-		font.draw(batch, (int) (game.camera.position.x - cameraOffset - guitarCube.position.x) + "", game.camera.position.x - 10, 330);
+		font.draw(batch, (int) (nextNoteNumber) + "", game.camera.position.x - 10, 330);
         batch.end();
+        
+        updateMap(50);
        
-        level.render(batch, shapeRenderer);
+        level.render(batch, shapeRenderer, nextNoteNumber);
         
         guitarCube.render(shapeRenderer);
     }
@@ -76,6 +81,8 @@ public class GameSession
     public void dispose()
     {
         // TODO: Implement this method
+        game.backMusic.stop();
+        game.backMusic.dispose();
     }
 
     public void resize(int width, int height)
@@ -86,11 +93,13 @@ public class GameSession
     public void pause()
     {
         // TODO: Implement this method
+        game.backMusic.pause();
     }
 
     public void resume()
     {
         // TODO: Implement this method
+        game.backMusic.play();
     }
 	
 	public void updateMap(int range) {

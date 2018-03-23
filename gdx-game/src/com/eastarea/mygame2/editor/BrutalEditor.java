@@ -58,7 +58,7 @@ public class BrutalEditor implements IStagable
 				public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
 				
 						//notes.add(music.getPosition());
-						notes.add(new Note(music.getPosition()));
+						notes.add(new Note(music.getPosition(), 0));
 						noteNumber++;
 					
 					return true;

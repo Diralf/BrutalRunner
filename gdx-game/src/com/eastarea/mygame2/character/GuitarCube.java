@@ -34,7 +34,7 @@ public class GuitarCube implements IRenderable, ICollideable
         nextPosition.x = position.x + manVelocity.x * deltaTime;
 		nextPosition.y = position.y;
 		
-		List<ICollideable> list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.SOLID), 0);
+		List<ICollideable> list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.SOLID), game.session.nextNoteNumber);
 		if (!list.isEmpty())
 		{
 			nextPosition.x = position.x;
@@ -42,7 +42,7 @@ public class GuitarCube implements IRenderable, ICollideable
 		
         nextPosition.y = position.y + manVelocity.y * deltaTime;
 		
-		list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.SOLID), 0);
+		list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.SOLID), game.session.nextNoteNumber);
 		if (!list.isEmpty())
 		{
 			//nextPosition.y = position.y;
@@ -103,7 +103,7 @@ public class GuitarCube implements IRenderable, ICollideable
         else
             manVelocity.y= 0;
 			
-		list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.LIQUID), 0);
+		list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.LIQUID), game.session.nextNoteNumber);
 		for (ICollideable c : list)
 		{
 			c.emitCollision(this);

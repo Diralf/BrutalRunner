@@ -50,10 +50,17 @@ public class GameLevel
 		notes.add(note);
 	}
     
-    public void render(SpriteBatch batch, ShapeRenderer shape)
+    public void render(SpriteBatch batch, ShapeRenderer shape, int position)
     {
-        for (List<IRenderable> b: renderList.list)
-            for (IRenderable r: b)
+        int start =  position - 5;
+        int end = position + 10;
+        int size = renderList.list.size();
+
+        if (start < 0) start = 0;
+		if (end > size) end = size;
+        
+        for (int i=start; i < end; i++)
+            for (IRenderable r: renderList.getList(i))
 		    {   
                 r.render(batch);
                 r.render(shape);
