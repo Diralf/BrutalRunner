@@ -103,7 +103,7 @@ public class GameSession
     }
 	
 	public void updateMap(int range) {
-		float resX = guitarCube.position.x + guitarCube.position.width - beginMusicPosition;
+		float resX = guitarCube.position.x /*+ guitarCube.position.width*/ - beginMusicPosition;
 		if (musicPosition ==0) return;
 		resX /= musicPosition;
 
