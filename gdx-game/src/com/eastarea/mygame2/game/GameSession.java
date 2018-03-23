@@ -26,7 +26,7 @@ public class GameSession
     {
         this.game = game;
         level = new GameLevel(500);
-		cameraOffset = (int)(game.camera.viewportWidth / 2) + 200;
+		cameraOffset = (int)(game.camera.viewportWidth / 2) + 300;
         
         guitarCube = new GuitarCube(game);
 		
