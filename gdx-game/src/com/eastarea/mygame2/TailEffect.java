@@ -21,7 +21,7 @@ abstract public class TailEffect implements IRenderable
     {
         for (Rectangle r: list) {
             drawFigure(shape, r);
-        }
+		}
     }
 
     @Override

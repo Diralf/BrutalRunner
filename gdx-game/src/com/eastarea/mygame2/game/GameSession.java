@@ -42,7 +42,7 @@ public class GameSession
 		
 		makeMapByNotes(game.notesName, startFloor);
         
-        music.setVolume(0);
+       // music.setVolume(0);
         
         resetGame();
     }

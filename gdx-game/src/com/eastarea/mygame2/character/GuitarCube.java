@@ -37,10 +37,16 @@ public class GuitarCube implements IRenderable, ICollideable
         tail = new TailEffect(30) {
 
             @Override
-            public void drawFigure(ShapeRenderer shape, Rectangle figure)
+            public void drawFigure(ShapeRenderer shape, Rectangle f)
             {
-                shape.setColor(0.6f, 1f, 0.8f, 0.5f);
-                shape.rect(figure.x, figure.y, figure.width, figure.height);
+                shape.setColor(0.6f, 1, 0.8f, 0.5f);
+				float[] c = {f.x, f.y,
+								f.x, f.y + sizey,
+								f.x + f.width, f.y + f.height,
+								f.x + f.width, f.y + f.height - sizey};
+				
+				shape.triangle(c[0], c[1], c[2], c[3], c[4], c[5]);
+				shape.triangle(c[0], c[1], c[4], c[5], c[6], c[7]);
             }
         };
     }
@@ -94,6 +100,8 @@ public class GuitarCube implements IRenderable, ICollideable
             onGround = true;
         }
         
+		//tail.addPosition(new Rectangle(position.x, position.y, nextPosition.x - position.x, nextPosition.y + sizey - position.y));
+		
         position.x = nextPosition.x ;
         position.y = nextPosition.y;
         
@@ -118,8 +126,7 @@ public class GuitarCube implements IRenderable, ICollideable
 		{
 			c.emitCollision(this);
 		}
-        
-        tail.addPosition(new Rectangle(nextPosition));
+		
     }
     
     public void run() 
@@ -135,8 +142,12 @@ public class GuitarCube implements IRenderable, ICollideable
     @Override
     public void render(ShapeRenderer shape)
     {
+		shape.begin(ShapeRenderer.ShapeType.Line);
+		
+		shape.end();
+		
         shape.begin(ShapeRenderer.ShapeType.Filled);
-        tail.render(shape);
+        //tail.render(shape);
         shape.setColor(0.3f, 0.7f, 0.5f, 1);
         shape.rect(position.x, position.y, position.width, position.height);
         shape.end();
