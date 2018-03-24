@@ -58,8 +58,6 @@ public class BrutalGame implements IStagable
         // render
         session.render(batch, shapeRenderer, font);
         
-        //camera.update();
-        
 		buttons.render();
 	}
 	

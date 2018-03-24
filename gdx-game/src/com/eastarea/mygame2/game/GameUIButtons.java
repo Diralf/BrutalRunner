@@ -17,7 +17,7 @@ public class GameUIButtons extends GuiScene
 		back = createButton("Back", 0, 0);
 		start = createButton("Start", 200,0);
 		pause = createButton("Pause", 400, 0);
-        
+ 
         back.addListener(new ClickListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int p, int b) {
