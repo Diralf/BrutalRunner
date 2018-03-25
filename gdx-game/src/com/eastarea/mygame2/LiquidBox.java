@@ -10,6 +10,8 @@ public class LiquidBox extends CollisionBox implements IRenderable
 	//TextureRegion rockTexture;
 	float color;
 	int heightBox;
+	//boolean isHit;
+	//boolean isHitOnce;
 	
 	public LiquidBox(int x, int y, int width, int height)
 	{
@@ -17,11 +19,13 @@ public class LiquidBox extends CollisionBox implements IRenderable
 		//Texture texture2 = new Texture(Gdx.files.internal("rock.png"));
 		//rockTexture = new TextureRegion(texture2, 25, 0, 250, 250);
 		color = 1;
+		//isHit = false;
 	}
 
 	@Override
 	public void render(ShapeRenderer shape)
 	{
+		//if (isHit) return;
 		shape.begin(ShapeRenderer.ShapeType.Filled);
 		// TODO: Implement this method
         shape.setColor(1,color,color,1);
@@ -48,6 +52,7 @@ public class LiquidBox extends CollisionBox implements IRenderable
 	{
 	     color = 0;
 		 heightBox = 10;
+		 //isHit = true;
 	}
 
     @Override

@@ -17,11 +17,13 @@ public class GuitarCube implements IRenderable, ICollideable
     
     boolean onGround;
     
+	int startx = 300;
+	int starty = 50;
     int sizex = 50;
 	int sizey = 50;
 	int speedx = 500;
 	int speedy = 700;
-	int accely = 1400;
+	int accely = 1300;
 	int gravity = 3000;
     
     TailEffect tail;
@@ -29,10 +31,7 @@ public class GuitarCube implements IRenderable, ICollideable
     public GuitarCube(BrutalGame game)
     {
 		this.game = game;
-        position = new Rectangle(300, 51, sizex, sizey);
-        nextPosition = new Rectangle(300, 51, sizex, sizey);
-		velocity = new Vector2(0, 0);
-        onGround = true;
+        reset();
         
         tail = new TailEffect(30) {
 
@@ -50,6 +49,14 @@ public class GuitarCube implements IRenderable, ICollideable
             }
         };
     }
+	
+	public void reset()
+	{
+		position = new Rectangle(startx, starty, sizex, sizey);
+        nextPosition = new Rectangle(startx, starty, sizex, sizey);
+		velocity = new Vector2(0, 0);
+        onGround = true;
+	}
     
     public void update(GameLevel level) 
     {
@@ -61,6 +68,7 @@ public class GuitarCube implements IRenderable, ICollideable
 		if (!list.isEmpty())
 		{
 			nextPosition.x = position.x;
+			game.session.resetGame();
 		}
 		
         nextPosition.y = position.y + velocity.y * deltaTime;

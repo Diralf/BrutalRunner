@@ -7,50 +7,55 @@ import com.eastarea.mygame2.note.*;
 import java.util.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.graphics.*;
 
 public class GameSession
 {
     BrutalGame game;
-    Music music;
-    
+    public Music music;
+	OrthographicCamera camera;
+	
     public GameLevel level;
     GuitarCube guitarCube;
     
     CollisionBox startFloor;
 	
-	int cameraOffset;
+	//int cameraOffset;
 	
 	int beginMusicPosition = 300;
 	float musicPosition = 0;
 	public int nextNoteNumber = 0;
     float timer = 0;
     
-    
-
     public GameSession(BrutalGame game)
     {
         this.game = game;
         level = new GameLevel(1000);
-		cameraOffset = (int)(game.camera.viewportWidth / 2) + 300;
+		camera = game.camera.camera;
+		//cameraOffset = (int)(game.camera.viewportWidth / 2) + 300;
         
         guitarCube = new GuitarCube(game);
         
-        music = game.backMusic;
+        music = Gdx.audio.newMusic(game.musicFile);
 		
         startFloor = new SolidBox(0,10,10000,40);
         level.add(0, startFloor);
 		
 		makeMapByNotes(game.notesName, startFloor);
         
-       // music.setVolume(0);
-        
         resetGame();
     }
 
     public void resetGame()
     {
+		guitarCube.reset();
+		musicPosition = 0;
+		nextNoteNumber = 0;
+		startFloor = new SolidBox(0,10,10000,40);
         if (music.isPlaying())
             music.stop();
+		music.dispose();
+		music = Gdx.audio.newMusic(game.musicFile);
         start();
     }
     
@@ -61,9 +66,7 @@ public class GameSession
     
     public void update()
     {
-        game.camera.position.x = guitarCube.position.x + cameraOffset;
-		
-		game.camera.update();
+        game.camera.update(guitarCube);
         
         if (!music.isPlaying()) 
         {
@@ -85,15 +88,15 @@ public class GameSession
     
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer, BitmapFont font)
     {
-        batch.setProjectionMatrix(game.camera.combined);
-        shapeRenderer.setProjectionMatrix(game.camera.combined);
+        batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         
         game.background.render(batch);
         
         batch.begin();
         font.setColor(0,0,0,1);
-        font.draw(batch, (int) (timer) + "s", game.camera.position.x - 10, 300);
-		font.draw(batch, (int) (nextNoteNumber) + "", game.camera.position.x - 10, 330);
+        font.draw(batch, (int) (timer) + "s", camera.position.x - 10, 300);
+		font.draw(batch, (int) (nextNoteNumber) + "", camera.position.x - 10, 330);
         batch.end();
        
         level.render(batch, shapeRenderer, nextNoteNumber);
@@ -141,7 +144,7 @@ public class GameSession
 			if (i>0) {
 				prevNote = level.notes.get(i-1);
 			} else {
-				prevNote = new Note(0, startFloor, null);
+				prevNote = new Note(0, new SolidBox(0, 0, 50, 50), null);
 			}
 			level.notes.get(i).updateOX(prevNote, resX, beginMusicPosition);
 			if ( guitarCube.position.x + guitarCube.position.width > level.notes.get(i).floor.getMask().x) {
@@ -161,7 +164,7 @@ public class GameSession
 			if (num>0) {
 				prevNote = level.notes.get(num-1);
 			} else {
-				prevNote = new Note(0, firstBox, null);
+				prevNote = new Note(0, new SolidBox(0, 0, 50, 50), null);
 			}
 			val.updateOX(prevNote, guitarCube.velocity.x, beginMusicPosition);
 			

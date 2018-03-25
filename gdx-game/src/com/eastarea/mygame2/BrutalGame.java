@@ -7,19 +7,21 @@ import com.badlogic.gdx.graphics.glutils.*;
 import com.eastarea.mygame2.game.*;
 import com.eastarea.mygame2.io.*;
 import java.io.*;
+import com.badlogic.gdx.files.*;
 
 public class BrutalGame implements IStagable
 {
 	
-	//public GameRun grun;й
+	//public GameRun grun;
     public GameSession session;
 
-	public OrthographicCamera camera;
+	//public OrthographicCamera camera;
+	public GameCamera camera;
     public GameBackground background;
 	
 	public Sound collisionSound;
     
-    public Music backMusic;
+	public FileHandle musicFile;
     
     public String musicName;
 	public String notesName;
@@ -34,17 +36,18 @@ public class BrutalGame implements IStagable
 		
 		// Load background 
         background = new GameBackground(this);
+		camera = new GameCamera();
 
 		// Load and position rocks
 	
 		collisionSound = Gdx.audio.newSound(Gdx.files.internal("collision.wav"));
-        backMusic = Gdx.audio.newMusic(Gdx.files.internal(musicName));
+		musicFile = Gdx.files.internal(musicName);
+        
 
-		camera = new OrthographicCamera();
+		
 		
         session = new GameSession(this);
 		buttons = new GameUIButtons(this);
-        configureCamera();
         
         
 	}
@@ -59,14 +62,6 @@ public class BrutalGame implements IStagable
         session.render(batch, shapeRenderer, font);
         
 		buttons.render();
-	}
-	
-	public void configureCamera()
-	{
-		if (Gdx.graphics.getHeight() < Gdx.graphics.getWidth())
-			camera.setToOrtho(false, 800, 800 * Gdx.graphics.getHeight() / Gdx.graphics.getWidth());
-		else
-			camera.setToOrtho(false, 800 * Gdx.graphics.getWidth() / Gdx.graphics.getHeight(), 800);
 	}
 	
 	@Override
