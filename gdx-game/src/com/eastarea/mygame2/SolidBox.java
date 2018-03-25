@@ -16,7 +16,7 @@ public class SolidBox extends CollisionBox implements IRenderable
 	@Override
 	public void render(ShapeRenderer shape)
 	{
-        shape.begin(ShapeRenderer.ShapeType.Line);
+        shape.begin(ShapeRenderer.ShapeType.Filled);
 		// TODO: Implement this method
 		if (isPlaceMan)
 			shape.setColor(0, 0, 0, 1);

@@ -18,7 +18,7 @@ public class GuitarCube implements IRenderable, ICollideable
     boolean onGround;
     
     int sizex = 50;
-	int sizey = 100;
+	int sizey = 50;
 	int speedx = 500;
 	int speedy = 700;
 	int accely = 1400;
