@@ -22,7 +22,7 @@ public abstract class ButtonListItem implements IListItem
 		line = new HorizontalGroup();
 		//line.addActor(new Label(index + ". " + file.getName().substring(0, file.getName().indexOf('.')), scene.skin));
 
-		TextButton button = new TextButton(index + ". " + file.getName().substring(0, file.getName().indexOf('.')), scene.skin);
+		TextButton button = new TextButton(index + ". " + file.getName()/*.substring(0, file.getName().indexOf('.'))*/, scene.skin);
 		line.addActor(button);
 		button.addListener(new ClickListener() {
 				public void clicked (InputEvent event, float x, float y) {

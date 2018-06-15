@@ -11,6 +11,8 @@ import org.apache.poi.ss.formula.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.eastarea.mygame2.gui.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.*;
 import com.eastarea.mygame2.gui.list.*;
 
 public class TrackListUI extends GuiTableScene implements IStagable
@@ -18,10 +20,17 @@ public class TrackListUI extends GuiTableScene implements IStagable
 	
 	public TrackListUI()
 	{
-		ArrayList<File> files = IOFile.listFiles(IOFile.getExtDir(), "txt");
-		ScrollList list = new ScrollList(this, files, new TrackListItem(this));
-		
-		
+        ArrayList<File> fileList = (ArrayList<File>) IOFile.fileHandleToFileList(IOFile.listAssetFiles("txt"));
+		ScrollList list = new ScrollList(this, fileList, new TrackListItem(this));
+//	    FileHandle[] fils = Gdx.files.internal("").list(new FilenameFilter() {
+//                                   public boolean accept(File dir, String name) {
+//                                       return name.toLowerCase().endsWith("." + "txt");
+//                                   }
+//                               });
+//        for (FileHandle h : fils) {
+//            System.out.println(h.name());
+//        }
+//		
 		/*VerticalGroup table = new VerticalGroup();
 		//table.debug();
 

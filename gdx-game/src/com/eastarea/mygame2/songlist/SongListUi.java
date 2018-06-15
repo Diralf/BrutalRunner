@@ -18,9 +18,10 @@ public class SongListUi extends GuiTableScene implements IStagable
 
 	public SongListUi()
 	{
-		ArrayList<File> files = IOFile.listFiles(IOFile.getExtDir(), "mp3");
+		//ArrayList<File> files = IOFile.listFiles(IOFile.getExtDir(), "mp3");
+        ArrayList<File> fileList = (ArrayList<File>) IOFile.fileHandleToFileList(IOFile.listAssetFiles("mp3"));
 		SongListItem listItem = new SongListItem(this);
-		ScrollList list = new ScrollList(this, files, listItem);
+		ScrollList list = new ScrollList(this, fileList, listItem);
 		
 		TextButton onTopButton = new TextButton("Back to menu", skin);
 		onTopButton.addListener(new ChangeListener() {

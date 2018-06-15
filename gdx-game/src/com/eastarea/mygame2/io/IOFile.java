@@ -5,6 +5,8 @@ import android.content.*;
 import com.eastarea.mygame2.*;
 import java.util.*;
 import android.os.*;
+import com.badlogic.gdx.files.*;
+import com.badlogic.gdx.*;
 
 public class IOFile
 {
@@ -251,6 +253,27 @@ public class IOFile
 		filesList.addAll(Arrays.asList(files));
 		return filesList;
 	}
+    
+    static public ArrayList<FileHandle> listAssetFiles(final String ext) {
+        ArrayList<FileHandle> filesList = new ArrayList<FileHandle>();
+        FileHandle[] files = Gdx.files.internal("").list(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith("." + ext);
+                }
+            });
+        filesList.addAll(Arrays.asList(files));
+        return filesList;
+	}
+    
+    static public List<File> fileHandleToFileList(List<FileHandle> list)
+    {
+        List<File> res = new ArrayList<File>();
+        for (FileHandle fh : list)
+        {
+            res.add(fh.file());
+        }
+        return res;
+    }
 	
 	static public File getExtDir()
 	{

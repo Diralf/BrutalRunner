@@ -37,8 +37,7 @@ public class GameSession
         guitarCube = new GuitarCube(game);
         
         music = Gdx.audio.newMusic(game.musicFile);
-		
-        startFloor = new SolidBox(0,10,10000,40);
+        startFloor = new JumpBox(0,10,10000,40);
         level.add(0, startFloor);
 		
 		makeMapByNotes(game.notesName, startFloor);
@@ -51,7 +50,7 @@ public class GameSession
 		guitarCube.reset();
 		musicPosition = 0;
 		nextNoteNumber = 0;
-		startFloor = new SolidBox(0,10,10000,40);
+		startFloor = new FloorBox(0,10,10000,40);
         if (music.isPlaying())
             music.stop();
 		music.dispose();
@@ -97,6 +96,8 @@ public class GameSession
         font.setColor(0,0,0,1);
         font.draw(batch, (int) (timer) + "s", camera.position.x - 10, 300);
 		font.draw(batch, (int) (nextNoteNumber) + "", camera.position.x - 10, 330);
+        font.draw(batch, (int) (guitarCube.velocity.y) + "ms", camera.position.x - 10, 360);
+        font.draw(batch,  (guitarCube.onGround) + "", camera.position.x - 10, 390);
         batch.end();
        
         level.render(batch, shapeRenderer, nextNoteNumber);
@@ -144,7 +145,7 @@ public class GameSession
 			if (i>0) {
 				prevNote = level.notes.get(i-1);
 			} else {
-				prevNote = new Note(0, new SolidBox(0, 0, 50, 50), null);
+				prevNote = new Note(0, new FloorBox(0, 0, 50, 50), null);
 			}
 			level.notes.get(i).updateOX(prevNote, resX, beginMusicPosition);
 			if ( guitarCube.position.x + guitarCube.position.width > level.notes.get(i).floor.getMask().x) {
@@ -155,7 +156,7 @@ public class GameSession
 
 	public void makeMapByNotes(String notesName, CollisionBox firstBox)
 	{
-		List<Note> vals = NoteIO.readExtArray(notesName);
+		List<Note> vals = NoteIO.readAssetArray(notesName);
 		int num =0;
 		level.countNotes = vals.size();
 
@@ -164,7 +165,7 @@ public class GameSession
 			if (num>0) {
 				prevNote = level.notes.get(num-1);
 			} else {
-				prevNote = new Note(0, new SolidBox(0, 0, 50, 50), null);
+				prevNote = new Note(0, new FloorBox(0, 0, 50, 50), null);
 			}
 			val.updateOX(prevNote, guitarCube.velocity.x, beginMusicPosition);
 			

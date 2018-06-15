@@ -22,12 +22,22 @@ public class Note
 	
 	public Note(float time, NoteItem item)
 	{
-		this(time, new SolidBox(0, 0, 100, 50), item);
+		this(time, new FloorBox(0, 0, 100, 50), item);
 	}
 	
 	public Note(float time, int y, int h, int yitem, NoteItemType type)
 	{
-		this(time, new SolidBox(0, y, 100, h), new NoteItem(yitem, type));
+		this(time, new FloorBox(0, y, 100, h), new NoteItem(yitem, type));
+	}
+    
+    public Note(float time, EFloorType floorType, int y, int h, int yitem, NoteItemType type)
+    {
+        this(time, null, new NoteItem(yitem, type));
+        if (floorType == EFloorType.JUMP) {
+            floor = new JumpBox(0, y, 100, h);
+        } else {
+            floor = new FloorBox(0, y, 100, h);
+        }
 	}
 	
 	public Note(float time, int y)

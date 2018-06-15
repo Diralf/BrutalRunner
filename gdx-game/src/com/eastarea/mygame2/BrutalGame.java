@@ -32,24 +32,16 @@ public class BrutalGame implements IStagable
 	{
         String shortFileName = IOFile.getSortName(songFile);
         musicName = shortFileName+".mp3";
-        notesName = shortFileName+".txt";
+        notesName = songFile.getName();
 		
-		// Load background 
         background = new GameBackground(this);
 		camera = new GameCamera();
-
-		// Load and position rocks
 	
 		collisionSound = Gdx.audio.newSound(Gdx.files.internal("collision.wav"));
 		musicFile = Gdx.files.internal(musicName);
-        
-
-		
-		
+       
         session = new GameSession(this);
 		buttons = new GameUIButtons(this);
-        
-        
 	}
 	
 	@Override

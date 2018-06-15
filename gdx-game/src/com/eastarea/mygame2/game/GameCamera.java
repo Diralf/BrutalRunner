@@ -10,7 +10,7 @@ public class GameCamera
 	
 	float cameraOffsetx;
 	float cameraOffsety;
-	int speedy = 100;
+	int speedy = 10;
 	
 	public GameCamera()
 	{
@@ -33,7 +33,7 @@ public class GameCamera
 	{
 		float gy = guitarCube.position.y;
 		camera.position.x = guitarCube.position.x + cameraOffsetx;
-		if (gy > camera.viewportHeight*2/3)
+		if (camera.position.y > camera.viewportHeight/2 || gy > camera.viewportHeight/2 || camera.position.y <0)
 			camera.position.y = moveTo(camera.position.y, gy + cameraOffsety, speedy);
 
 		camera.update();
@@ -41,7 +41,7 @@ public class GameCamera
 	
 	float moveTo(float start, float target, float speed)
 	{
-		float delta = Math.abs(target-start) * Gdx.graphics.getDeltaTime();
+		float delta = Math.abs(target-start) *  speed * Gdx.graphics.getDeltaTime();
 		if (Math.abs(target-start) < delta)
 			return target;
 		return start + (delta * Math.signum(target - start));

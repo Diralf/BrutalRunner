@@ -3,6 +3,8 @@ import java.io.*;
 import android.os.*;
 import java.util.*;
 import com.eastarea.mygame2.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.*;
 
 public class NoteIO
 {
@@ -22,19 +24,44 @@ public class NoteIO
 		float time = Float.parseFloat(str);
 		
 		str = br.readLine();
-		int yFloor =(int) Float.parseFloat(str);
+		int floorTypeNum =(int) Float.parseFloat(str);
+        EFloorType floorType = EFloorType.NORMAL;
+        if (floorTypeNum == 1) floorType = EFloorType.JUMP;
 		
 		str = br.readLine();
+        if (str == null) return null;
 		int hFloor = (int) Float.parseFloat(str);
 		
 		str = br.readLine();
 		int yItem = (int) Float.parseFloat(str);
 		
-		return new Note(time, yFloor, hFloor, yItem, NoteItemType.BONUS);
+		return new Note(time, floorType, hFloor - 50, 50, yItem, NoteItemType.BONUS);
+	}
+    
+    static public Note load(LinkedList<String> songText)
+    {
+        String str = songText.poll();
+        if (str == null) return null;
+        float time = Float.parseFloat(str);
+
+        str = songText.poll();
+        int floorTypeNum =(int) Float.parseFloat(str);
+        EFloorType floorType = EFloorType.NORMAL;
+        if (floorTypeNum == 1) floorType = EFloorType.JUMP;
+
+        str = songText.poll();
+        if (str == null) return null;
+        int hFloor = (int) Float.parseFloat(str);
+
+        str = songText.poll();
+        int yItem = (int) Float.parseFloat(str);
+
+        return new Note(time, floorType, hFloor - 50, 50, yItem, NoteItemType.BONUS);
 	}
 	
 	static public void writeExtArray(String fileName, List<Note> data) {
 		// проверяем доступность SD
+        
 		if (!Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			System.out.println( "SD-карта не доступна: " + Environment.getExternalStorageState());
@@ -42,7 +69,7 @@ public class NoteIO
 		}
 		File sdPath = MyGdxGame.context.getExternalFilesDir(null);
 		sdPath.mkdirs();
-		File sdFile = new File(sdPath, fileName);
+		File sdFile = Gdx.files.internal(fileName).file();//new File(sdPath, fileName);
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(sdFile));
 			for (Note note : data)
@@ -69,15 +96,17 @@ public class NoteIO
 		// добавляем свой каталог к пути
 		//sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
 		// формируем объект File, который содержит путь к файлу
-		File sdFile = new File(sdPath, fileName);
+        File sdFile = new File(sdPath, fileName);
 		List<Note> list = new ArrayList<Note>();
 		try {
 			// открываем поток для чтения
 			BufferedReader br = new BufferedReader(new FileReader(sdFile));
 			Note note;
 			// читаем содержимое
+            int i= 0;
 			while ((note = NoteIO.load(br)) != null) {
-				list.add(note);
+                list.add(note);
+                i++;
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
@@ -88,6 +117,20 @@ public class NoteIO
 
 		return list;
 	}
-	
-	
+    
+    static public List<Note> readAssetArray(String fileName) {
+        String text =Gdx.files.internal(fileName).readString();
+        LinkedList<String> lineList = new LinkedList<String>();
+        List<Note> list = new ArrayList<Note>();
+        Note note;
+        int i= 0;
+        
+        lineList.addAll(Arrays.asList(text.split("\n")));
+        
+        while ((note = NoteIO.load(lineList)) != null) {
+            list.add(note);
+            i++;
+        }
+        return list;
+	}
 }

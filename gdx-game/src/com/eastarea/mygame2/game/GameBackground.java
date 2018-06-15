@@ -14,6 +14,7 @@ public class GameBackground implements IRenderable
 	public TextureRegion backgroundTexture2;
 	public TextureRegion backgroundTexture3;
     public int size = 1126;
+    
     public GameBackground(BrutalGame game)
     {
         this.game = game;
@@ -40,25 +41,27 @@ public class GameBackground implements IRenderable
         batch.begin();
         batch.disableBlending();
         
-        renderBack(batch, backgroundTexture0, 0.0625f);
+        renderBack(batch, backgroundTexture0, 0.0625f, 0);
         
         batch.enableBlending();
 		
-		renderBack(batch, backgroundTexture1, 0.125f);
-        renderBack(batch, backgroundTexture2, 0.25f);
-        renderBack(batch, backgroundTexture3, 0.5f);
+		renderBack(batch, backgroundTexture1, 0.125f, 0.33f);
+        renderBack(batch, backgroundTexture2, 0.25f, 0.66f);
+        renderBack(batch, backgroundTexture3, 0.5f, 1);
         
         batch.end();
     }
 	
-	void renderBack(SpriteBatch batch, TextureRegion backgroundTexture, float speed)
+	void renderBack(SpriteBatch batch, TextureRegion backgroundTexture, float speed, float offsety)
 	{
 		float gcx = game.session.guitarCube.position.x;
         float sx = (((int)(gcx*speed/800))-1)*800 + (gcx - gcx*speed);
+        float cmy = game.camera.camera.position.y - game.camera.camera.viewportHeight/2;
+        float y = cmy - cmy *  speed;
         for (int i = 0; i < 3; i++)
         {
             float x = i * 800 + sx;
-            batch.draw(backgroundTexture, x, 0, 800, 800);
+            batch.draw(backgroundTexture, x, y, 800, 800);
         }
 	}
 }

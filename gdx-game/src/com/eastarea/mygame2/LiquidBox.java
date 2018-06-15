@@ -28,9 +28,9 @@ public class LiquidBox extends CollisionBox implements IRenderable
 		//if (isHit) return;
 		shape.begin(ShapeRenderer.ShapeType.Filled);
 		// TODO: Implement this method
-        shape.setColor(1,color,color,1);
+        shape.setColor(1,color,0,1);
 		shape.circle(mask.x+mask.width/2, mask.y+mask.height/2, heightBox);
-        shape.setColor(1,1,1,1);
+        shape.setColor(1,1,0,1);
 		color = 1;
         heightBox = (int) mask.height/2;
 		shape.end();

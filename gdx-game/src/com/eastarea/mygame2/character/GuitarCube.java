@@ -15,7 +15,7 @@ public class GuitarCube implements IRenderable, ICollideable
     public Rectangle nextPosition;
 	public Vector2 velocity;
     
-    boolean onGround;
+    public boolean onGround;
     
 	int startx = 300;
 	int starty = 50;
@@ -24,7 +24,8 @@ public class GuitarCube implements IRenderable, ICollideable
 	int speedx = 500;
 	int speedy = 700;
 	int accely = 1300;
-	int gravity = 3000;
+    int normalGravity = 3000;
+    int gravity = normalGravity;
     
     TailEffect tail;
 
@@ -60,6 +61,7 @@ public class GuitarCube implements IRenderable, ICollideable
     
     public void update(GameLevel level) 
     {
+        List<ICollideable> listEmit = new ArrayList<ICollideable>();
         float deltaTime = Gdx.graphics.getDeltaTime();
         nextPosition.x = position.x + velocity.x * deltaTime;
 		nextPosition.y = position.y;
@@ -71,9 +73,10 @@ public class GuitarCube implements IRenderable, ICollideable
 			game.session.resetGame();
 		}
 		
-        nextPosition.y = position.y + velocity.y * deltaTime;
+        nextPosition.y = position.y + velocity.y * deltaTime - 1;
 		
 		list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.SOLID), game.session.nextNoteNumber);
+        listEmit.addAll(list);
 		if (!list.isEmpty())
 		{
 			float higest = 0;
@@ -88,7 +91,6 @@ public class GuitarCube implements IRenderable, ICollideable
 				if (low < lowest) {
 					lowest = low;
 				}
-				c.emitCollision(this);
 			}
 			if (position.y < lowest) {
 				nextPosition.y = lowest - position.height;
@@ -104,33 +106,36 @@ public class GuitarCube implements IRenderable, ICollideable
         
         if (nextPosition.y < 0) 
         {
-            nextPosition.y = 0;
-            onGround = true;
+            game.session.resetGame();
+            //nextPosition.y = 0;
+            //onGround = true;
         }
         
-		//tail.addPosition(new Rectangle(position.x, position.y, nextPosition.x - position.x, nextPosition.y + sizey - position.y));
+		tail.addPosition(new Rectangle(position.x, position.y, nextPosition.x - position.x, nextPosition.y + sizey - position.y));
 		
         position.x = nextPosition.x ;
         position.y = nextPosition.y;
         
-        if (Gdx.input.isTouched() && onGround)
+        if (Gdx.input.isTouched())
         {
-            velocity.y = speedy;
-            onGround = false;
+            jump(speedy, normalGravity);
 		}
 		
-		if (Gdx.input.isTouched() && !onGround)
+		if (Gdx.input.isTouched() && !onGround && accely < gravity)
 		{
 			velocity.y += accely * Gdx.graphics.getDeltaTime();
 		}
        
         if (!onGround)
             velocity.y -= gravity * Gdx.graphics.getDeltaTime();
-        else
+        else {
             velocity.y= 0;
+            gravity = normalGravity;
+        }
 			
 		list = level.checkCollision(nextPosition, level.collisionMap.get(ECollisionType.LIQUID), game.session.nextNoteNumber);
-		for (ICollideable c : list)
+        listEmit.addAll(list);
+		for (ICollideable c : listEmit)
 		{
 			c.emitCollision(this);
 		}
@@ -147,6 +152,16 @@ public class GuitarCube implements IRenderable, ICollideable
         velocity.x = 0;
     }
     
+    public void jump(float speed, int gravity)
+    {
+        if (onGround)
+        {
+            velocity.y = speed;
+            this.gravity = gravity;
+            onGround = false;
+		}
+    }
+    
     @Override
     public void render(ShapeRenderer shape)
     {
@@ -155,7 +170,7 @@ public class GuitarCube implements IRenderable, ICollideable
 		shape.end();
 		
         shape.begin(ShapeRenderer.ShapeType.Filled);
-        //tail.render(shape);
+        tail.render(shape);
         shape.setColor(0.3f, 0.7f, 0.5f, 1);
         shape.rect(position.x, position.y, position.width, position.height);
         shape.end();
@@ -171,6 +186,7 @@ public class GuitarCube implements IRenderable, ICollideable
     public void emitCollision(ICollideable other)
     {
         // TODO: Implement this method
+    
     }
 
     @Override
